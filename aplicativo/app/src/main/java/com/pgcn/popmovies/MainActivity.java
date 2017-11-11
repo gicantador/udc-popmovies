@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadMoviesData() {
-        mTextoTeste.setText(String.valueOf(NetworkUtils.buildUrl()));
+      //  mTextoTeste.setText(String.valueOf(NetworkUtils.buildUrl()));
     }
 
 

@@ -1,4 +1,4 @@
-package com.pgcn.popmovies.popmovies.utilities;
+package com.pgcn.popmovies.utilities;
 
 import android.net.Uri;
 import android.util.Log;
