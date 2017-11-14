@@ -10,6 +10,12 @@ import android.widget.TextView;
 import com.pgcn.udcpopmovies.utils.MovieModel;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DetailMovieActivity extends AppCompatActivity {
 
 
@@ -47,19 +53,25 @@ public class DetailMovieActivity extends AppCompatActivity {
                     mOriginalTitle.setText(movie.getOriginalTitle());
                     mSynopsis.setText(movie.getOverview());
                     mRating.setText(String.valueOf(movie.getVoteAverage()));
-                    mReleaseDate.setText(movie.getReleaseDate());
+                    mReleaseDate.setText(formataDataRelease(movie.getDtaReleaseDate()));
 
                     String imagePath = movie.getPosterPath();
                     if (imagePath != null && !imagePath.isEmpty()) {
-                        //Picasso.with(context).load(movie.getPosterPath()).into(viewHolder.moviePoster);
                         Picasso.with(this).load(imagePath).placeholder(R.drawable.progress_animation).into(mPoster);
-
-                        // Log.d(TAG, "Imagem: " + imagePath);
                     }
 
 
                 }
             }
         }
+    }
+
+    private String formataDataRelease(Date dtaReleaseDate) {
+
+        if (null != dtaReleaseDate) {
+            final DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
+            return df.format(dtaReleaseDate);
+        }
+        return StringUtils.EMPTY;
     }
 }
