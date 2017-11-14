@@ -28,19 +28,8 @@ public class TheMoviedbJsonUtils {
     public static ArrayList<MovieModel> getSimpleMovieStringsFromJson(Context context, String movieJsonStr)
             throws JSONException {
 
-
-// labels Movie
-/*        final String LABEL_ID = "id";
-        final String LABEL_TITLE = "title";
-        final String LABEL_POSTER = "poster_path";
-        final String LABEL_BACKDROP = "backdrop_path";
-        final String LABEL_DATE = "release_date";
-        final String LABEL_AVR_VOTE = "vote_average";
-        final String LABEL_POPULARIDADE = "popularity";*/
-
         ArrayList<MovieModel> movieModelArrayList = new ArrayList<MovieModel>();
         JSONObject moviesJson = new JSONObject(movieJsonStr);
-        //String[] parsedMoviesData = null;
 
         /* Is there an error? */
         verificaRetorno(moviesJson);

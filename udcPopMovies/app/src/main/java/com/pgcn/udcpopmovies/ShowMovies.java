@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pgcn.udcpopmovies.utils.EndlessRecyclerOnScrollListener;
 import com.pgcn.udcpopmovies.utils.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 public class ShowMovies extends AppCompatActivity
         implements MoviesAdapter.MovieAdapterOnClickHandler {
 
-    private static final int NUM_LIST_ITEMS = 10;
     private static final String TAG = ShowMovies.class.getSimpleName();
     private final int NRO_COLUNAS = 2;
     ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
@@ -44,6 +44,8 @@ public class ShowMovies extends AppCompatActivity
     private TextView mFilterTextView;
     final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
     private CoordinatorLayout coordinatorLayout;
+
+    public int mCurrentPage = 0;
 
     //    final Activity showmoviesActivity = this;
 
@@ -66,29 +68,45 @@ public class ShowMovies extends AppCompatActivity
         mPbLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         loadMovieData();
+        montaGrid();
         montaTextoAlerta();
 
-        // TODO: passar os dados né dããããããã
-        GridLayoutManager layoutManager = new GridLayoutManager(this, NRO_COLUNAS);
-        mRecyView.setLayoutManager(layoutManager);
-
-        mRecyView.setHasFixedSize(false);
-//        if (mMovieModelArrayList != null) {
-//            Log.d(TAG, "MOVIE LIST ANTES DO ADAPTER TEM " + mMovieModelArrayList.size() + " itens!!!!");
-//        }
         mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, this);
         mRecyView.setAdapter(mMoviestAdapter);
     }
+
+    private void montaGrid() {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NRO_COLUNAS);
+        mRecyView.setLayoutManager(gridLayoutManager);
+        mRecyView.setHasFixedSize(false);
+        mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int current_page) {
+                Log.d(TAG, "onLoadMore" + current_page);
+                mCurrentPage++;
+                if (0 != current_page) {
+                    loadMovieData();
+                }
+            }
+
+        });
+    }
+
 
     /**
      * Carrega os dados de filmes de forma assíncrona
      */
     private void loadMovieData() {
+
         if (isOnline()) {
+            if (0 == mCurrentPage) {
+                mCurrentPage++;
+            }
             new FetchMovieTask().execute();
         } else {
             mostrarFeedback(getString(R.string.erro_conexao), Snackbar.LENGTH_INDEFINITE);
         }
+        //  montaGrid();
     }
 
     /**
@@ -97,8 +115,7 @@ public class ShowMovies extends AppCompatActivity
      * @return
      */
     public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
@@ -109,19 +126,72 @@ public class ShowMovies extends AppCompatActivity
         Context context = this;
         Class destinationClass = DetailMovieActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        //   intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieid);
-
-        ////////////
         intentToStartDetailActivity.putExtra("Movie", movie);
-
-
         startActivity(intentToStartDetailActivity);
-
     }
 
     private void invalidateData() {
         mMoviestAdapter.setMovieData(null);
         loadMovieData();
+    }
+
+
+    public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {
+
+        @Override
+        protected void onPreExecute() {
+            mPbLoadingIndicator.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<MovieModel> movieModels) {
+            super.onPostExecute(movieModels);
+            mPbLoadingIndicator.setVisibility(View.INVISIBLE);
+
+            if (movieModels != null) {
+                mMovieModelArrayList = movieModels;
+            }
+            mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, mClickHandler);
+
+            mRecyView.setAdapter(mMoviestAdapter);
+        }
+
+        @Override
+        protected ArrayList<MovieModel> doInBackground(String... strings) {
+
+            Log.d(TAG, "=== Inicio Asynnc FetchMovieTask - doInBackground");
+
+            URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort, mCurrentPage);
+            try {
+                String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
+                if (jsonMoviesResponse != null) {
+                    if (null == mMovieModelArrayList || mMovieModelArrayList.isEmpty()) {
+                        mMovieModelArrayList = TheMoviedbJsonUtils
+                                .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse);
+                    } else if (!mMovieModelArrayList.isEmpty()) {
+                        mMovieModelArrayList.addAll(TheMoviedbJsonUtils
+                                .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse));
+                    }
+//                    if (mMovieModelArrayList != null) {
+//                        Log.d(TAG, "Tamanho mMovieModelArrayList: " + mMovieModelArrayList.size());
+//                    }
+                    return mMovieModelArrayList;
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG, " doInBackground ", e);
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+            super.onProgressUpdate(values);
+        }
     }
 
     // menus
@@ -205,69 +275,5 @@ public class ShowMovies extends AppCompatActivity
         snackbar.show();
 
     }
-
-
-    public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {
-
-        @Override
-        protected void onPreExecute() {
-            mPbLoadingIndicator.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieModel> movieModels) {
-            super.onPostExecute(movieModels);
-            mPbLoadingIndicator.setVisibility(View.INVISIBLE);
-
-            if (movieModels != null) {
-                mMovieModelArrayList = movieModels;
-            }
-            mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, mClickHandler);
-
-            mRecyView.setAdapter(mMoviestAdapter);
-
-
-        }
-
-        @Override
-        protected ArrayList<MovieModel> doInBackground(String... strings) {
-
-            Log.d(TAG, "=== Inicio Asynnc FetchMovieTask - doInBackground");
-
-            URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort);
-//            if (movieRequestUrl != null) {
-//                Log.d(TAG, "movieRequestUrl" + movieRequestUrl.toString());
-//            } else {
-//                Log.d(TAG, " movieRequestUrl is null");
-//            }
-            try {
-                String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
-                if (jsonMoviesResponse != null) {
-                    String[] simpleJsonMovieData = new String[1];
-                    mMovieModelArrayList = TheMoviedbJsonUtils
-                            .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse);
-//                    if (mMovieModelArrayList != null) {
-//                        Log.d(TAG, "Tamanho mMovieModelArrayList: " + mMovieModelArrayList.size());
-//                    }
-                    return mMovieModelArrayList;
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG, " doInBackground ", e);
-                e.printStackTrace();
-                return null;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-            super.onProgressUpdate(values);
-        }
-    }
-
-
 }
 

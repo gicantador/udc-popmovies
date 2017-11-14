@@ -64,9 +64,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
             String imagePath = movie.getPosterPath();
             if (imagePath != null && !imagePath.isEmpty()) {
-                //Picasso.with(context).load(movie.getPosterPath()).into(viewHolder.moviePoster);
                 Picasso.with(holder.moviePoster.getContext()).load(imagePath).placeholder(R.drawable.progress_animation).into(holder.moviePoster);
-
                 // Log.d(TAG, "Imagem: " + imagePath);
             }
         }

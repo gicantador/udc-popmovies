@@ -22,6 +22,7 @@ public class NetworkUtils {
     private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
     private final static String KEY_PARAM = "api_key";
     private final static String SORT_BY = "sort_by";
+    private final static String PAGE = "page";
     private final static int timeout = 20000; // 20 sec
 
     // filter configuration
@@ -30,16 +31,17 @@ public class NetworkUtils {
     public static final String SORT_ASC = ".asc";
     public static final String SORT_DESC = ".desc";
 
-        private static final String API_KEY = "<PUT YOUR API KEY HERE>";
+    private static final String API_KEY = "<PUT YOUR API KEY HERE>";
 
     /**
      * Buld conection URL
      *
      * @param tipoLista popular or top rated
      * @param tipoSort  asc or desc
+     * @param pageToGet the number of the page to be request
      * @return
      */
-    public static URL buildMoviesUrl(String tipoLista, String tipoSort) {
+    public static URL buildMoviesUrl(String tipoLista, String tipoSort, int pageToGet) {
 
         /* there's no data for locale Brasil and language pt-br, so i'll comment this
           String localIso = context.getResources().getConfiguration().locale.getISO3Country();
@@ -49,6 +51,7 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
                 .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
+                .appendQueryParameter(PAGE,String.valueOf(pageToGet))
                 // .appendQueryParameter(REGION_PARAM, localIso)
                 // .appendQueryParameter(LANGUAGE_PARAM, languageIso)
                 .build();
