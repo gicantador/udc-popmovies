@@ -1,6 +1,7 @@
 package com.pgcn.udcpopmovies;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,9 +19,7 @@ import java.util.Date;
 
 public class DetailMovieActivity extends AppCompatActivity {
 
-
     private static final String TAG = DetailMovieActivity.class.getSimpleName();
-
 
     private TextView mOriginalTitle;
     private ImageView mPoster;
@@ -28,18 +27,17 @@ public class DetailMovieActivity extends AppCompatActivity {
     private TextView mRating;
     private TextView mReleaseDate;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_movie);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mOriginalTitle = (TextView) findViewById(R.id.tv_movie_title);
         mSynopsis = (TextView) findViewById(R.id.tv_synopsis);
         mRating = (TextView) findViewById(R.id.tv_rating);
         mReleaseDate = (TextView) findViewById(R.id.tv_release_date);
         mPoster = (ImageView) findViewById(R.id.iv_poster);
-
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -48,7 +46,7 @@ public class DetailMovieActivity extends AppCompatActivity {
 
                 MovieModel movie = (MovieModel) intentThatStartedThisActivity.getSerializableExtra("Movie");
                 if (null != movie) {
-                    Log.d(TAG, " MOVIE SELECIONADO :" + movie.toString());
+//                    Log.d(TAG, " MOVIE SELECIONADO :" + movie.toString());
 
                     mOriginalTitle.setText(movie.getOriginalTitle());
                     mSynopsis.setText(movie.getOverview());
@@ -59,8 +57,6 @@ public class DetailMovieActivity extends AppCompatActivity {
                     if (imagePath != null && !imagePath.isEmpty()) {
                         Picasso.with(this).load(imagePath).placeholder(R.drawable.progress_animation).into(mPoster);
                     }
-
-
                 }
             }
         }

@@ -72,7 +72,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         this.viewHolderCount++;
         //Log.d(TAG, "onCreateViewHolder: number of ViewHolders created: "+ viewHolderCount);
 
-
     }
 
     @Override

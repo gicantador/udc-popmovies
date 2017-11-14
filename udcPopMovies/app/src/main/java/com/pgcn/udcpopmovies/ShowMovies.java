@@ -2,6 +2,7 @@ package com.pgcn.udcpopmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -39,27 +40,24 @@ public class ShowMovies extends AppCompatActivity
     private MoviesAdapter mMoviestAdapter;
     private RecyclerView mRecyView;
     private ProgressBar mPbLoadingIndicator;
-    private String mTipoLista;
-    private String mTipoSort;
+
     private TextView mFilterTextView;
     final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
     private CoordinatorLayout coordinatorLayout;
 
+    // inicia com filmes populares desc
+    private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
+    private String mTipoSort = NetworkUtils.SORT_DESC;
+
     public int mCurrentPage = 0;
-
-    //    final Activity showmoviesActivity = this;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_movies);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-
-        // inicia com filmes populares desc
-        mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
-        mTipoSort = NetworkUtils.SORT_DESC;
 
         mFilterTextView = (TextView) findViewById(R.id.text_filter);
 
@@ -75,6 +73,9 @@ public class ShowMovies extends AppCompatActivity
         mRecyView.setAdapter(mMoviestAdapter);
     }
 
+    /**
+     * Monta do GridLayout
+     */
     private void montaGrid() {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NRO_COLUNAS);
         mRecyView.setLayoutManager(gridLayoutManager);
@@ -110,7 +111,7 @@ public class ShowMovies extends AppCompatActivity
     }
 
     /**
-     * Verifica se device est[a conectado
+     * Verifica se device está conectado
      *
      * @return
      */
@@ -120,6 +121,11 @@ public class ShowMovies extends AppCompatActivity
         return netInfo != null && netInfo.isConnected();
     }
 
+    /**
+     * Chama tela de detalhes de filme através de intent
+     *
+     * @param movie o filme escolhido
+     */
     @Override
     public void onClick(MovieModel movie) {
 
@@ -130,16 +136,22 @@ public class ShowMovies extends AppCompatActivity
         startActivity(intentToStartDetailActivity);
     }
 
+    /**
+     * Limpa a tela para nova busca
+     */
     private void invalidateData() {
         mMoviestAdapter.setMovieData(null);
         loadMovieData();
     }
 
-
+    /**
+     * Asyns task que fará as buscas em background
+     */
     public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {
 
         @Override
         protected void onPreExecute() {
+            // mostra loading
             mPbLoadingIndicator.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
@@ -148,7 +160,7 @@ public class ShowMovies extends AppCompatActivity
         protected void onPostExecute(ArrayList<MovieModel> movieModels) {
             super.onPostExecute(movieModels);
             mPbLoadingIndicator.setVisibility(View.INVISIBLE);
-
+            // remove loading e seta lista no adapter
             if (movieModels != null) {
                 mMovieModelArrayList = movieModels;
             }
@@ -173,9 +185,6 @@ public class ShowMovies extends AppCompatActivity
                         mMovieModelArrayList.addAll(TheMoviedbJsonUtils
                                 .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse));
                     }
-//                    if (mMovieModelArrayList != null) {
-//                        Log.d(TAG, "Tamanho mMovieModelArrayList: " + mMovieModelArrayList.size());
-//                    }
                     return mMovieModelArrayList;
                 }
 
@@ -225,7 +234,6 @@ public class ShowMovies extends AppCompatActivity
                 mTipoSort = NetworkUtils.SORT_ASC;
 
         }
-        // updatefilter;
 
         Snackbar snackbar = Snackbar.make(coordinatorLayout, montaTextoAlerta(), Snackbar.LENGTH_SHORT);
         snackbar.show();
@@ -234,6 +242,11 @@ public class ShowMovies extends AppCompatActivity
     }
 
 
+    /**
+     * Monta o texto que é exibido na tela para mostrar o filtro selecionado
+     *
+     * @return texto
+     */
     private String montaTextoAlerta() {
 
         final String nm = "action_name_";
