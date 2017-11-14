@@ -3,6 +3,7 @@
     package="com.pgcn.udcpopmovies">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailMovieActivity"></activity>
+        <activity
+            android:name=".DetailMovieActivity"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

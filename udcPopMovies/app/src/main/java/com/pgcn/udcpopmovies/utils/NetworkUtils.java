@@ -1,6 +1,8 @@
 package com.pgcn.udcpopmovies.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
@@ -30,6 +32,7 @@ public class NetworkUtils {
 
 
     private static final String API_KEY = "<PUT YOUR API KEY HERE>";
+
 
 
     public static URL buildMoviesUrl(String tipoLista, String tipoSort, Context context) {
@@ -62,9 +65,13 @@ public class NetworkUtils {
 
     }
 
+
+
+
     public static String getResponseFromHttpUrl(URL movieRequestUrl) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) movieRequestUrl.openConnection();
         try {
+
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);

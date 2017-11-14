@@ -2,8 +2,13 @@ package com.pgcn.udcpopmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,14 +42,17 @@ public class ShowMovies extends AppCompatActivity
     private String mTipoSort;
     private TextView mFilterTextView;
     final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
+    private CoordinatorLayout coordinatorLayout;
 
-    //   final Activity showmoviesActivity = this;
+    //    final Activity showmoviesActivity = this;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_movies);
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 
         // inicia com filmes populares desc
         mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
@@ -75,9 +83,24 @@ public class ShowMovies extends AppCompatActivity
      * Carrega os dados de filmes de forma assíncrona
      */
     private void loadMovieData() {
-        new FetchMovieTask().execute();
+        if (isOnline()) {
+            new FetchMovieTask().execute();
+        } else {
+            mostrarFeedback(getString(R.string.erro_conexao));
+        }
     }
 
+    /**
+     * Verifica se device est[a conectado
+     *
+     * @return
+     */
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
 
     @Override
     public void onClick(MovieModel movie) {
@@ -87,7 +110,7 @@ public class ShowMovies extends AppCompatActivity
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
         //   intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, movieid);
 
-       ////////////
+        ////////////
         intentToStartDetailActivity.putExtra("Movie", movie);
 
 
@@ -154,6 +177,28 @@ public class ShowMovies extends AppCompatActivity
 
         mFilterTextView.setText(txtLista + " " + txtSort);
         return txtLista + " " + txtSort;
+    }
+
+    private void mostrarFeedback(String message) {
+
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.reload, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        loadMovieData();
+                    }
+                });
+
+        // Changing message text color
+        snackbar.setActionTextColor(Color.RED);
+
+        // Changing action button text color
+        View sbView = snackbar.getView();
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+        snackbar.show();
+
     }
 
     public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {

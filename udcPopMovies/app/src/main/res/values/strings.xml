@@ -13,6 +13,8 @@
     <string name="title_activity_detail_movie">DetailMovieActivity</string>
     <string name="lb_rating">Rating: </string>
     <string name="lb_release">Release Date: </string>
+    <string name="reload">Reload</string>
+    <string name="erro_conexao">Não há conexão com a internet. Deseja tentar novamente?</string>
 
 
 </resources>
