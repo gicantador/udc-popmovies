@@ -141,6 +141,9 @@ public class ShowMovies extends AppCompatActivity
      */
     private void invalidateData() {
         mMoviestAdapter.setMovieData(null);
+        if (null != mMovieModelArrayList) {
+            mMovieModelArrayList.clear();
+        }
         loadMovieData();
     }
 

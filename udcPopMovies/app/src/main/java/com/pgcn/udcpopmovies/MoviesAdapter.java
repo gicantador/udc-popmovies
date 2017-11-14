@@ -118,10 +118,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             int adapterPosition = getAdapterPosition();
             MovieModel movieSelected = mMovieList.get(adapterPosition);
             if (movieSelected != null) {
-
                 Log.d(TAG, "Filme selecionado : posicao[" + adapterPosition + "] title[" + movieSelected.getTitle() + "]");
-
-
                 mClickHandler.onClick(movieSelected);
             }
         }
