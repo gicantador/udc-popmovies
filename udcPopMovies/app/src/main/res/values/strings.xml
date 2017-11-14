@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">udc PopMovies</string>
+    <string name="app_name">PopMovies</string>
+    <string name="action_sort_popular">Top Popular</string>
+    <string name="action_sort_rated">Top Rated</string>
+    <string name="action_sort_desc">DESC</string>
+    <string name="action_sort_asc">ASC</string>
+
+
+    <string name="action_name_popularity">Top Popular</string>
+    <string name="action_name_vote_average">Top Rated</string>
+    <string name="action_name_.desc">DESC</string>
+    <string name="action_name_.asc">ASC</string>
+    <string name="title_activity_detail_movie">DetailMovieActivity</string>
+    <string name="lb_rating">Rating: </string>
+    <string name="lb_release">Release Date: </string>
+
+
 </resources>
