@@ -19,11 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pgcn.udcpopmovies.utils.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class ShowMovies extends AppCompatActivity
         mPbLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
         loadMovieData();
-
+        montaTextoAlerta();
 
         // TODO: passar os dados né dããããããã
         GridLayoutManager layoutManager = new GridLayoutManager(this, NRO_COLUNAS);
@@ -86,7 +87,7 @@ public class ShowMovies extends AppCompatActivity
         if (isOnline()) {
             new FetchMovieTask().execute();
         } else {
-            mostrarFeedback(getString(R.string.erro_conexao));
+            mostrarFeedback(getString(R.string.erro_conexao), Snackbar.LENGTH_INDEFINITE);
         }
     }
 
@@ -156,13 +157,14 @@ public class ShowMovies extends AppCompatActivity
         }
         // updatefilter;
 
-
-        Toast.makeText(this.getBaseContext(), montaTextoToast(), Toast.LENGTH_LONG).show();
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, montaTextoAlerta(), Snackbar.LENGTH_SHORT);
+        snackbar.show();
         invalidateData();
         return true;
     }
 
-    private String montaTextoToast() {
+
+    private String montaTextoAlerta() {
 
         final String nm = "action_name_";
         int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string",
@@ -175,14 +177,17 @@ public class ShowMovies extends AppCompatActivity
         String txtSort =
                 getString(resId1Sort);
 
-        mFilterTextView.setText(txtLista + " " + txtSort);
-        return txtLista + " " + txtSort;
+        String txt = getString(R.string.label_filtro_usado) + StringUtils.SPACE + txtLista + StringUtils.SPACE + txtSort;
+
+        mFilterTextView.setText(txt);
+        mFilterTextView.setVisibility(View.VISIBLE);
+        return txt;
     }
 
-    private void mostrarFeedback(String message) {
+    private void mostrarFeedback(String message, int lengthIndefinite) {
 
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .make(coordinatorLayout, message, lengthIndefinite)
                 .setAction(R.string.reload, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -200,6 +205,7 @@ public class ShowMovies extends AppCompatActivity
         snackbar.show();
 
     }
+
 
     public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {
 
@@ -229,8 +235,6 @@ public class ShowMovies extends AppCompatActivity
 
             Log.d(TAG, "=== Inicio Asynnc FetchMovieTask - doInBackground");
 
-
-            // TODO mudar de popular para TOP RATED
             URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort, ShowMovies.this);
 //            if (movieRequestUrl != null) {
 //                Log.d(TAG, "movieRequestUrl" + movieRequestUrl.toString());
