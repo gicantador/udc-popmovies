@@ -1,6 +1,5 @@
 package com.pgcn.udcpopmovies.utils;
 
-import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,35 +16,42 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    // config de conexao
+    private static final String TAG = NetworkUtils.class.getSimpleName();
+
+    // connection configuration
+    private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
+    private final static String KEY_PARAM = "api_key";
+    private final static String SORT_BY = "sort_by";
+    private final static int timeout = 20000; // 20 sec
+
+    // filter configuration
     public static final String SORT_POPULAR_PARAM = "popularity";
     public static final String SORT_VOTE_PARAM = "vote_average";
     public static final String SORT_ASC = ".asc";
     public static final String SORT_DESC = ".desc";
-    private static final String TAG = NetworkUtils.class.getSimpleName();
-    private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
-    private final static String KEY_PARAM = "api_key";
-    private final static String SORT_BY = "sort_by";
 
-    private static final String API_KEY = "<PUT YOUR API KEY HERE>";
+        private static final String API_KEY = "<PUT YOUR API KEY HERE>";
 
-    public static URL buildMoviesUrl(String tipoLista, String tipoSort, Context context) {
+    /**
+     * Buld conection URL
+     *
+     * @param tipoLista popular or top rated
+     * @param tipoSort  asc or desc
+     * @return
+     */
+    public static URL buildMoviesUrl(String tipoLista, String tipoSort) {
 
-        //  String localIso = context.getResources().getConfiguration().locale.getISO3Country();
-        //  String languageIso = context.getResources().getConfiguration().locale.getISO3Language();
-
-        //.getResources().getConfiguration().locale
-
+        /* there's no data for locale Brasil and language pt-br, so i'll comment this
+          String localIso = context.getResources().getConfiguration().locale.getISO3Country();
+          String languageIso = context.getResources().getConfiguration().locale.getISO3Language();
+          */
 
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
                 .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
-                // There`s no data for Brasil ptbr
-                //   .appendQueryParameter(REGION_PARAM, localIso)
+                // .appendQueryParameter(REGION_PARAM, localIso)
                 // .appendQueryParameter(LANGUAGE_PARAM, languageIso)
-
                 .build();
-        Log.d(TAG, " ++++++ +++ +++ +++ +++ Built URI " + builtUri.toString());
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -54,16 +60,21 @@ public class NetworkUtils {
         }
 
         Log.d(TAG, "Built URI " + url);
-
         return url;
-
     }
 
 
-    public static String getResponseFromHttpUrl(URL movieRequestUrl) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) movieRequestUrl.openConnection();
+    /**
+     *  Connects to the api and retrieve tje data
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
-
+            urlConnection.setConnectTimeout(timeout);
+            urlConnection.setReadTimeout(timeout);
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);
@@ -72,7 +83,6 @@ public class NetworkUtils {
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
                 String item = scanner.next();
-                //    Log.d(TAG, "hasInput "+item);
                 return item;
             } else {
                 return null;

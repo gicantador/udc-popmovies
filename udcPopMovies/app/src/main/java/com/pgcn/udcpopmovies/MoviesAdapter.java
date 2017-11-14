@@ -35,11 +35,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         viewHolderCount = 0;
     }
 
-
-    public MoviesAdapter(ArrayList<MovieModel> mMovieModelArrayList) {
-    }
-
-
     public interface MovieAdapterOnClickHandler {
         void onClick(MovieModel movie);
     }

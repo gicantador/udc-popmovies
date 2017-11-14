@@ -235,7 +235,7 @@ public class ShowMovies extends AppCompatActivity
 
             Log.d(TAG, "=== Inicio Asynnc FetchMovieTask - doInBackground");
 
-            URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort, ShowMovies.this);
+            URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort);
 //            if (movieRequestUrl != null) {
 //                Log.d(TAG, "movieRequestUrl" + movieRequestUrl.toString());
 //            } else {
