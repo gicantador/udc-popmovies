@@ -29,6 +29,7 @@ public class NetworkUtils {
     private final static String KEY_PARAM = "api_key";
     private final static String SORT_BY = "sort_by";
 
+   
     private static final String API_KEY = "<PUT YOUR API KEY HERE>";
 
     public static URL buildMoviesUrl(String tipoLista, String tipoSort, Context context) {
