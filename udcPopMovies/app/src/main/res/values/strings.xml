@@ -1,21 +1,22 @@
 <resources>
-    <string name="app_name">PopMovies</string>
-    <string name="action_sort_popular">Top Popular</string>
-    <string name="action_sort_rated">Top Rated</string>
-    <string name="action_sort_desc">DESC</string>
-    <string name="action_sort_asc">ASC</string>
+    <string name="app_name" translatable="false">PopMovies</string>
+    <string name="action_sort_popular" translatable="false">Top Popular</string>
+    <string name="action_sort_rated" translatable="false">Top Rated</string>
+    <string name="action_sort_desc" translatable="false">DESC</string>
+    <string name="action_sort_asc" translatable="false">ASC</string>
 
 
-    <string name="action_name_popularity">Top Popular</string>
-    <string name="action_name_vote_average">Top Rated</string>
-    <string name="action_name_.desc">DESC</string>
-    <string name="action_name_.asc">ASC</string>
-    <string name="title_activity_detail_movie">DetailMovieActivity</string>
+    <string name="action_name_popularity" translatable="false">Top Popular</string>
+    <string name="action_name_vote_average" translatable="false">Top Rated</string>
+    <string name="action_name_.desc" translatable="false">DESC</string>
+    <string name="action_name_.asc" translatable="false">ASC</string>
+    <string name="title_activity_detail_movie">Movie</string>
     <string name="lb_rating">Rating: </string>
     <string name="lb_release">Release Date: </string>
-    <string name="reload">Reload</string>
-    <string name="erro_conexao">Não há conexão com a internet. Deseja tentar novamente?</string>
-    <string name="label_filtro_usado">Exibindo filmes:</string>
+    <string name="reload" translatable="false">Reload</string>
+    <string name="txt_empty_data"><![CDATA[< data not provided >]]></string>
+    <string name="erro_conexao">There is no internet connection. Do you want to try again?</string>
+    <string name="label_filtro_usado">Showing films:</string>
 
 
 </resources>
