@@ -253,14 +253,11 @@ public class ShowMovies extends AppCompatActivity
     private String montaTextoAlerta() {
 
         final String nm = "action_name_";
-        int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string",
-                this.getPackageName());
+        int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string", this.getPackageName());
         String txtLista = getString(resId1Lista);
 
-        int resId1Sort = getResources().getIdentifier(nm + mTipoSort, "string",
-                this.getPackageName());
-        String txtSort =
-                getString(resId1Sort);
+        int resId1Sort = getResources().getIdentifier(nm + mTipoSort, "string", this.getPackageName());
+        String txtSort = getString(resId1Sort);
 
         String txt = getString(R.string.label_filtro_usado) + StringUtils.SPACE + txtLista + StringUtils.SPACE + txtSort;
 
