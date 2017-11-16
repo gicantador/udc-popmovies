@@ -27,7 +27,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     private static final String TAG = MoviesAdapter.class.getSimpleName();
 
-    private MovieAdapterOnClickHandler mClickHandler;
+    private final MovieAdapterOnClickHandler mClickHandler;
 
     public MoviesAdapter(ArrayList<MovieModel> movieList, MovieAdapterOnClickHandler clickHandler) {
         mMovieList = movieList;
@@ -47,8 +47,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movie_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
         MovieViewHolder viewHolder = new MovieViewHolder(view);
 
         return viewHolder;
@@ -69,7 +68,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             }
         }
 
-        this.viewHolderCount++;
+        viewHolderCount++;
         //Log.d(TAG, "onCreateViewHolder: number of ViewHolders created: "+ viewHolderCount);
 
     }
@@ -83,12 +82,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         return 0;
     }
 
+    public void setMovieData() {
+        mMovieList = null;
+        notifyDataSetChanged();
+    }
+
     /**
      * Cache of the children views for a list item.
      */
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView moviePoster;
+        final ImageView moviePoster;
         //private ListItemClickListener mOnClickListener;
 
         public int movieId;
@@ -96,19 +100,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         public MovieViewHolder(View itemView) {
 
             super(itemView);
-            moviePoster = (ImageView) itemView.findViewById(R.id.img_poster);
+            moviePoster = itemView.findViewById(R.id.img_poster);
             itemView.setOnClickListener(this);
 
-
-        }
-
-        /**
-         * A method we wrote for convenience. This method will take an integer as input and
-         * use that integer to display the appropriate text within a list item.
-         *
-         * @param listIndex Position of the item in the list
-         */
-        void bind(int listIndex) {
 
         }
 
@@ -122,12 +116,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 mClickHandler.onClick(movieSelected);
             }
         }
-    }
-
-
-    public void setMovieData(ArrayList<MovieModel> movies) {
-        mMovieList = movies;
-        notifyDataSetChanged();
     }
 
 

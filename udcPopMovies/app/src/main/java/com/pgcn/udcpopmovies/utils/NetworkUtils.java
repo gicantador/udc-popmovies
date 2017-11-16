@@ -51,7 +51,7 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
                 .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
-                .appendQueryParameter(PAGE,String.valueOf(pageToGet))
+                .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 // .appendQueryParameter(REGION_PARAM, localIso)
                 // .appendQueryParameter(LANGUAGE_PARAM, languageIso)
                 .build();
@@ -68,7 +68,8 @@ public class NetworkUtils {
 
 
     /**
-     *  Connects to the api and retrieve tje data
+     * Connects to the api and retrieve tje data
+     *
      * @param url
      * @return
      * @throws IOException
@@ -85,8 +86,7 @@ public class NetworkUtils {
 
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
-                String item = scanner.next();
-                return item;
+                return scanner.next();
             } else {
                 return null;
             }

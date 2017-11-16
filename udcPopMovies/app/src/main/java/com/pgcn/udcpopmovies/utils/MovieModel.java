@@ -221,7 +221,7 @@ public class MovieModel implements Serializable {
      * @param textoData
      * @return
      */
-    public Date getReleaseDateFromString(String textoData) {
+    private Date getReleaseDateFromString(String textoData) {
         if (textoData != null && !textoData.isEmpty()) {
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

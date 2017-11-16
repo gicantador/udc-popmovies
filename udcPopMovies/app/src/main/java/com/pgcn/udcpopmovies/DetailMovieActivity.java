@@ -18,12 +18,6 @@ public class DetailMovieActivity extends AppCompatActivity {
 
     private static final String TAG = DetailMovieActivity.class.getSimpleName();
 
-    private TextView mOriginalTitle;
-    private ImageView mPoster;
-    private TextView mSynopsis;
-    private TextView mRating;
-    private TextView mReleaseDate;
-
     private String mTextoNaoFornecido;
 
     @Override
@@ -32,11 +26,11 @@ public class DetailMovieActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_movie);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        mOriginalTitle = (TextView) findViewById(R.id.tv_movie_title);
-        mSynopsis = (TextView) findViewById(R.id.tv_synopsis);
-        mRating = (TextView) findViewById(R.id.tv_rating);
-        mReleaseDate = (TextView) findViewById(R.id.tv_release_date);
-        mPoster = (ImageView) findViewById(R.id.iv_poster);
+        TextView mOriginalTitle = findViewById(R.id.tv_movie_title);
+        TextView mSynopsis = findViewById(R.id.tv_synopsis);
+        TextView mRating = findViewById(R.id.tv_rating);
+        TextView mReleaseDate = findViewById(R.id.tv_release_date);
+        ImageView mPoster = findViewById(R.id.iv_poster);
 
         mTextoNaoFornecido = getString(R.string.txt_empty_data);
 

@@ -35,8 +35,7 @@ public class ShowMovies extends AppCompatActivity
         implements MoviesAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = ShowMovies.class.getSimpleName();
-    private final int NRO_COLUNAS = 2;
-    ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
+    private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
     private RecyclerView mRecyView;
     private ProgressBar mPbLoadingIndicator;
@@ -49,7 +48,7 @@ public class ShowMovies extends AppCompatActivity
     private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
     private String mTipoSort = NetworkUtils.SORT_DESC;
 
-    public int mCurrentPage = 0;
+    private int mCurrentPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +56,13 @@ public class ShowMovies extends AppCompatActivity
         setContentView(R.layout.activity_show_movies);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
-        mFilterTextView = (TextView) findViewById(R.id.text_filter);
+        mFilterTextView = findViewById(R.id.text_filter);
 
         Log.d(TAG, "=== Inicio ShowMovies");
-        mRecyView = (RecyclerView) findViewById(R.id.rv_movies);
-        mPbLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mRecyView = findViewById(R.id.rv_movies);
+        mPbLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         loadMovieData();
         montaGrid();
@@ -77,7 +76,8 @@ public class ShowMovies extends AppCompatActivity
      * Monta do GridLayout
      */
     private void montaGrid() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NRO_COLUNAS);
+        int nroColunas = 2;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, nroColunas);
         mRecyView.setLayoutManager(gridLayoutManager);
         mRecyView.setHasFixedSize(false);
         mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
@@ -105,7 +105,7 @@ public class ShowMovies extends AppCompatActivity
             }
             new FetchMovieTask().execute();
         } else {
-            mostrarFeedback(getString(R.string.erro_conexao), Snackbar.LENGTH_INDEFINITE);
+            mostrarFeedback(getString(R.string.erro_conexao));
         }
         //  montaGrid();
     }
@@ -115,7 +115,7 @@ public class ShowMovies extends AppCompatActivity
      *
      * @return
      */
-    public boolean isOnline() {
+    private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
@@ -140,7 +140,7 @@ public class ShowMovies extends AppCompatActivity
      * Limpa a tela para nova busca
      */
     private void invalidateData() {
-        mMoviestAdapter.setMovieData(null);
+        mMoviestAdapter.setMovieData();
         if (null != mMovieModelArrayList) {
             mMovieModelArrayList.clear();
         }
@@ -255,8 +255,7 @@ public class ShowMovies extends AppCompatActivity
         final String nm = "action_name_";
         int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string",
                 this.getPackageName());
-        String txtLista =
-                getString(resId1Lista);
+        String txtLista = getString(resId1Lista);
 
         int resId1Sort = getResources().getIdentifier(nm + mTipoSort, "string",
                 this.getPackageName());
@@ -270,10 +269,10 @@ public class ShowMovies extends AppCompatActivity
         return txt;
     }
 
-    private void mostrarFeedback(String message, int lengthIndefinite) {
+    private void mostrarFeedback(String message) {
 
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, message, lengthIndefinite)
+                .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.reload, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -286,7 +285,7 @@ public class ShowMovies extends AppCompatActivity
 
         // Changing action button text color
         View sbView = snackbar.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.YELLOW);
         snackbar.show();
 

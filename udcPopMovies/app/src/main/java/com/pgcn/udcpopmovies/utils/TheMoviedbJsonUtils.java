@@ -34,7 +34,7 @@ public class TheMoviedbJsonUtils {
         /* Is there an error? */
         verificaRetorno(moviesJson);
 
-        int qtdMovies = 0;
+/*        int qtdMovies = 0;
         int qtdPag = 0;
         int nroPagAtual = 0;
 
@@ -49,7 +49,7 @@ public class TheMoviedbJsonUtils {
         if (moviesJson.has(labelNroPage)) {
             nroPagAtual = moviesJson.getInt(labelNroPage);
         }
-
+*/
         if (moviesJson.has(TMDB_LIST)) {
             JSONArray moviesArray = moviesJson.getJSONArray(TMDB_LIST);
             Gson gson2 = new Gson();
