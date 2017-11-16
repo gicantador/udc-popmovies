@@ -1,7 +1,7 @@
 package com.pgcn.udcpopmovies.utils;
 
 /**
-*   Esta classe está aqui apenas para previnir que a configuração de APIKEY seja commitada.
+ * Esta classe está aqui apenas para previnir que a configuração de APIKEY seja commitada.
  * Created by Giselle on 16/11/2017.
  */
 
