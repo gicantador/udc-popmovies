@@ -31,7 +31,7 @@ public class NetworkUtils {
     public static final String SORT_ASC = ".asc";
     public static final String SORT_DESC = ".desc";
 
-   private static final String API_KEY = "<PUT YOUR API KEY HERE>";
+    private static final String API_KEY = APIConfigurationConstants.API_KEY;
 
     /**
      * Buld conection URL
