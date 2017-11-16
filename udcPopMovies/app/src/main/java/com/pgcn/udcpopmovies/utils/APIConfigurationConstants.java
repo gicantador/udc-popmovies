@@ -6,5 +6,5 @@ package com.pgcn.udcpopmovies.utils;
 
 public final class APIConfigurationConstants {
 
-    private static final String API_KEY = "<API vermelho AQUI>";
+    private static final String API_KEY = "<API aazul AQUI>";
 }
