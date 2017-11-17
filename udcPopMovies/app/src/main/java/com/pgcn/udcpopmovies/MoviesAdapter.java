@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
 
-
-    private static int viewHolderCount;
-
     // a lista de movies
     private ArrayList<MovieModel> mMovieList;
 
@@ -32,7 +29,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     public MoviesAdapter(ArrayList<MovieModel> movieList, MovieAdapterOnClickHandler clickHandler) {
         mMovieList = movieList;
         mClickHandler = clickHandler;
-        viewHolderCount = 0;
     }
 
     public interface MovieAdapterOnClickHandler {
@@ -67,10 +63,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 // Log.d(TAG, "Imagem: " + imagePath);
             }
         }
-
-        viewHolderCount++;
-        //Log.d(TAG, "onCreateViewHolder: number of ViewHolders created: "+ viewHolderCount);
-
     }
 
     @Override
@@ -93,17 +85,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final ImageView moviePoster;
-        //private ListItemClickListener mOnClickListener;
 
         public int movieId;
 
         public MovieViewHolder(View itemView) {
-
             super(itemView);
             moviePoster = itemView.findViewById(R.id.img_poster);
             itemView.setOnClickListener(this);
-
-
         }
 
 
