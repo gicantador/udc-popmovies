@@ -50,19 +50,12 @@
             android:padding="4dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="10sp"
-                android:paddingStart="10sp"
-                android:text="@string/lb_rating"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                style="@style/Labels"
+                android:text="@string/lb_rating" />
 
             <TextView
                 android:id="@+id/tv_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp" />
+                style="@style/Textos" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,19 +65,12 @@
             android:padding="4dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="10sp"
-                android:paddingStart="10sp"
-                android:text="@string/lb_release"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                style="@style/Labels"
+                android:text="@string/lb_release" />
 
             <TextView
                 android:id="@+id/tv_release_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp" />
+                style="@style/Textos" />
         </LinearLayout>
 
     </LinearLayout>
