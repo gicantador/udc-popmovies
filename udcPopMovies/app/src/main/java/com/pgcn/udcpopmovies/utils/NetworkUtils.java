@@ -32,6 +32,7 @@ public class NetworkUtils {
     public static final String SORT_DESC = ".desc";
 
     private static final String API_KEY = APIConfigurationConstants.API_KEY;
+    private static final String DELIMITER_PATTERN = "\\A";
 
     /**
      * Buld conection URL
@@ -43,17 +44,10 @@ public class NetworkUtils {
      */
     public static URL buildMoviesUrl(String tipoLista, String tipoSort, int pageToGet) {
 
-        /* there's no data for locale Brasil and language pt-br, so i'll comment this
-          String localIso = context.getResources().getConfiguration().locale.getISO3Country();
-          String languageIso = context.getResources().getConfiguration().locale.getISO3Language();
-          */
-
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
                 .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(PAGE, String.valueOf(pageToGet))
-                // .appendQueryParameter(REGION_PARAM, localIso)
-                // .appendQueryParameter(LANGUAGE_PARAM, languageIso)
                 .build();
         URL url = null;
         try {
@@ -82,7 +76,7 @@ public class NetworkUtils {
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
+            scanner.useDelimiter(DELIMITER_PATTERN);
 
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
