@@ -113,12 +113,15 @@ public class ShowMoviesActivity extends AppCompatActivity
     /**
      * Verifica se device está conectado
      *
-     * @return
+     * @return boolean indicando se device está conectado à internet
      */
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+        if (null != cm) {
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            return (null != netInfo && netInfo.isConnected());
+        }
+        return false;
     }
 
     /**
