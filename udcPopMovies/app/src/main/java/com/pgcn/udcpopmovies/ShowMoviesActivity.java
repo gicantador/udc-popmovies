@@ -135,7 +135,7 @@ public class ShowMoviesActivity extends AppCompatActivity
         Context context = this;
         Class destinationClass = DetailMovieActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra("Movie", movie);
+        intentToStartDetailActivity.putExtra(MovieModel.LB_MOVIE, movie);
         startActivity(intentToStartDetailActivity);
     }
 

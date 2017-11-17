@@ -22,6 +22,7 @@ public class MovieModel implements Serializable {
 
 
     private static final String ROOT_PATH = "http://image.tmdb.org/t/p/w780//";
+    public static final String LB_MOVIE = "Movie";
 
 
     @SerializedName("poster_path")

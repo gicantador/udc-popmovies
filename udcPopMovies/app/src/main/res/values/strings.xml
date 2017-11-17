@@ -10,7 +10,7 @@
     <string name="action_name_vote_average" translatable="false">Top Rated</string>
     <string name="action_name_.desc" translatable="false">DESC</string>
     <string name="action_name_.asc" translatable="false">ASC</string>
-    <string name="title_activity_detail_movie">Movie</string>
+    <string name="title_activity_detail_movie" translatable="false">Movie</string>
     <string name="lb_rating">Rating: </string>
     <string name="lb_release">Release Date: </string>
     <string name="reload" translatable="false">Reload</string>

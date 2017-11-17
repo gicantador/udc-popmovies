@@ -37,11 +37,11 @@ public class DetailMovieActivity extends AppCompatActivity {
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
-            if (intentThatStartedThisActivity.hasExtra("Movie")) {
+            if (intentThatStartedThisActivity.hasExtra(MovieModel.LB_MOVIE)) {
 
-                MovieModel movie = (MovieModel) intentThatStartedThisActivity.getSerializableExtra("Movie");
+                MovieModel movie = (MovieModel) intentThatStartedThisActivity.getSerializableExtra(MovieModel.LB_MOVIE);
                 if (null != movie) {
-//                    Log.d(TAG, " MOVIE SELECIONADO :" + movie.toString());
+//                    Log.d(TAG, " LB_MOVIE SELECIONADO :" + movie.toString());
 
                     mOriginalTitle.setText((String) getCleanField(movie.getOriginalTitle()));
                     mSynopsis.setText((String) getCleanField(movie.getOverview()));
