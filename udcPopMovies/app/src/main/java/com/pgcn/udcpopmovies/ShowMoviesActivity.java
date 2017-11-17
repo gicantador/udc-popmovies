@@ -31,10 +31,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ShowMovies extends AppCompatActivity
+public class ShowMoviesActivity extends AppCompatActivity
         implements MoviesAdapter.MovieAdapterOnClickHandler {
 
-    private static final String TAG = ShowMovies.class.getSimpleName();
+    private static final String TAG = ShowMoviesActivity.class.getSimpleName();
     private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
     private RecyclerView mRecyView;
@@ -60,7 +60,7 @@ public class ShowMovies extends AppCompatActivity
 
         mFilterTextView = findViewById(R.id.text_filter);
 
-        Log.d(TAG, "=== Inicio ShowMovies");
+        Log.d(TAG, "=== Inicio ShowMoviesActivity");
         mRecyView = findViewById(R.id.rv_movies);
         mPbLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
@@ -183,10 +183,10 @@ public class ShowMovies extends AppCompatActivity
                 if (jsonMoviesResponse != null) {
                     if (null == mMovieModelArrayList || mMovieModelArrayList.isEmpty()) {
                         mMovieModelArrayList = TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse);
+                                .getSimpleMovieStringsFromJson(ShowMoviesActivity.this, jsonMoviesResponse);
                     } else if (!mMovieModelArrayList.isEmpty()) {
                         mMovieModelArrayList.addAll(TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(ShowMovies.this, jsonMoviesResponse));
+                                .getSimpleMovieStringsFromJson(ShowMoviesActivity.this, jsonMoviesResponse));
                     }
                     return mMovieModelArrayList;
                 }
