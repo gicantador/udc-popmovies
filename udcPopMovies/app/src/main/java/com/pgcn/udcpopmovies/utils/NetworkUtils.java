@@ -18,6 +18,8 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w780";
+
     // connection configuration
     private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
     private final static String KEY_PARAM = "api_key";
@@ -31,7 +33,8 @@ public class NetworkUtils {
     public static final String SORT_ASC = ".asc";
     public static final String SORT_DESC = ".desc";
 
-   private static final String API_KEY = "<PUT YOUR API KEY HERE>";
+    private static final String API_KEY = APIConfigurationConstants.API_KEY;
+    private static final String DELIMITER_PATTERN = "\\A";
 
     /**
      * Buld conection URL
@@ -43,17 +46,10 @@ public class NetworkUtils {
      */
     public static URL buildMoviesUrl(String tipoLista, String tipoSort, int pageToGet) {
 
-        /* there's no data for locale Brasil and language pt-br, so i'll comment this
-          String localIso = context.getResources().getConfiguration().locale.getISO3Country();
-          String languageIso = context.getResources().getConfiguration().locale.getISO3Language();
-          */
-
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
                 .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
-                .appendQueryParameter(PAGE,String.valueOf(pageToGet))
-                // .appendQueryParameter(REGION_PARAM, localIso)
-                // .appendQueryParameter(LANGUAGE_PARAM, languageIso)
+                .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 .build();
         URL url = null;
         try {
@@ -66,9 +62,18 @@ public class NetworkUtils {
         return url;
     }
 
+    /**
+     * @param path
+     * @return
+     */
+    public static String buildImageUrl(String path) {
+        return API_IMG_ROOT_PATH + path;
+    }
+
 
     /**
-     *  Connects to the api and retrieve tje data
+     * Connects to the api and retrieve tje data
+     *
      * @param url
      * @return
      * @throws IOException
@@ -81,12 +86,11 @@ public class NetworkUtils {
             InputStream in = urlConnection.getInputStream();
 
             Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
+            scanner.useDelimiter(DELIMITER_PATTERN);
 
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
-                String item = scanner.next();
-                return item;
+                return scanner.next();
             } else {
                 return null;
             }

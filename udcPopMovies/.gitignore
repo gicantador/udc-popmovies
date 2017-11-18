@@ -26,6 +26,9 @@ ant.properties
 local.properties
 project.properties
 
+udcPopMovies/app/src/main/java/com/pgcn/udcpopmovies/utils/APIConfigurationConstants.java
+APIConfigurationConstants.java
+
 # Eclipse project files
 .classpath
 .project

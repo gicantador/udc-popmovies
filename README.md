@@ -1,12 +1,17 @@
 # udc-popmovies
 App Pop Movies for Udacity classes
 
-
-Add API_KEY to class om.pgcn.udcpopmovies.utils.NetworkUtils. This can be found at www.themoviedb.org
+Coloque sua API_KEY obtida em http//www.themoviedb.org na classe com.pgcn.udcpopmovies.utils.APIConfigurationConstants
+Essa classe está sendo ignorada pelo git para evitar commitar a chave publicamente. 
 
 ---------------------------------------------------------------------------
-	com.pgcn.udcpopmovies.utils.NetworkUtils								 
-																			 
-		private static final String API_KEY = "<PUT YOUR API KEY HERE>";	 
+
+package com.pgcn.udcpopmovies.utils;	
+		
+public final class APIConfigurationConstants {
+
+    public static final String API_KEY = "<YOUR API KEY HERE>";
+}
+
 																			 
 ---------------------------------------------------------------------------
