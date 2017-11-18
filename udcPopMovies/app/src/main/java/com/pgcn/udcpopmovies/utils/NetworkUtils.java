@@ -18,6 +18,8 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w780";
+
     // connection configuration
     private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
     private final static String KEY_PARAM = "api_key";
@@ -58,6 +60,14 @@ public class NetworkUtils {
 
         Log.d(TAG, "Built URI " + url);
         return url;
+    }
+
+    /**
+     * @param path
+     * @return
+     */
+    public static String buildImageUrl(String path) {
+        return API_IMG_ROOT_PATH + path;
     }
 
 
