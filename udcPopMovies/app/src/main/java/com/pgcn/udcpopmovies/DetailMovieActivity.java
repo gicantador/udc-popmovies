@@ -18,6 +18,8 @@ import java.util.Date;
 public class DetailMovieActivity extends AppCompatActivity {
 
     private static final String TAG = DetailMovieActivity.class.getSimpleName();
+    private static final String RETURNED_PATTERN = "yyyy-MM-dd";
+    private static final String PATTERN_TO_SHOW = "EEE, d MMM yyyy";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +65,11 @@ public class DetailMovieActivity extends AppCompatActivity {
     private String formataDataRelease(String txtReleaseDate) {
 
         if (null != txtReleaseDate && !txtReleaseDate.isEmpty()) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat formatter = new SimpleDateFormat(RETURNED_PATTERN);
             try {
                 Date data = formatter.parse(txtReleaseDate);
                 if (null != data) {
-                    final DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy");
+                    final DateFormat df = new SimpleDateFormat(PATTERN_TO_SHOW);
                     return df.format(data);
                 }
             } catch (ParseException e) {

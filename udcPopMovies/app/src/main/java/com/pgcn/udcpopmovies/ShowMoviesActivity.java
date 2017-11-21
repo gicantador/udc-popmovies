@@ -2,7 +2,6 @@ package com.pgcn.udcpopmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,31 +31,36 @@ import org.apache.commons.lang3.StringUtils;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ShowMoviesActivity extends AppCompatActivity
-        implements MoviesAdapter.MovieAdapterOnClickHandler {
+public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = ShowMoviesActivity.class.getSimpleName();
     private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
     private RecyclerView mRecyView;
     private ProgressBar mPbLoadingIndicator;
-
-    private TextView mFilterTextView;
-    final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
     private CoordinatorLayout coordinatorLayout;
+    private TextView mFilterTextView;
+
+    final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
 
     // inicia com filmes populares desc
     private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
     private String mTipoSort = NetworkUtils.SORT_DESC;
 
     private int mCurrentPage = 0;
+    private boolean mRecarregaLista = true;
+
+    private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
+    private static final String KEY_SORT_FILTRO = "KEY_SORT_FILTRO";
+    private static final String KEY_MOVIELIST = "KEY_MOVIELIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_movies);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        recuperaDados(savedInstanceState);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
         mFilterTextView = findViewById(R.id.text_filter);
@@ -63,13 +68,49 @@ public class ShowMoviesActivity extends AppCompatActivity
         Log.d(TAG, "=== Inicio ShowMoviesActivity");
         mRecyView = findViewById(R.id.rv_movies);
         mPbLoadingIndicator = findViewById(R.id.pb_loading_indicator);
-
-        loadMovieData();
+        if (mRecarregaLista) {
+            loadMovieData();
+        }
         montaGrid();
         montaTextoAlerta();
 
         mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, this);
         mRecyView.setAdapter(mMoviestAdapter);
+    }
+
+    /**
+     * Recupera os dados salvos na memória para recriar a tela
+     *
+     * @param savedInstanceState
+     */
+    private void recuperaDados(Bundle savedInstanceState) {
+        if (null != savedInstanceState) {
+            if (savedInstanceState.containsKey(KEY_TIPO_FILTRO)) {
+                String tipo = savedInstanceState.getString(KEY_TIPO_FILTRO);
+                if (null == tipo || TextUtils.isEmpty(tipo)) {
+                    mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
+                } else {
+                    mTipoLista = tipo;
+                }
+            }
+            if (savedInstanceState.containsKey(KEY_SORT_FILTRO)) {
+                String tipo = savedInstanceState.getString(KEY_SORT_FILTRO);
+                if (null == tipo || TextUtils.isEmpty(tipo)) {
+                    mTipoSort = NetworkUtils.SORT_DESC;
+                } else {
+                    mTipoSort = tipo;
+                }
+            }
+            if (savedInstanceState.containsKey(KEY_MOVIELIST)) {
+                mMovieModelArrayList = savedInstanceState.getParcelableArrayList(KEY_MOVIELIST);
+                if (null != mMovieModelArrayList && !mMovieModelArrayList.isEmpty()) {
+                    // se o array recuperado estiver vazio, tenta buscar novamente
+                    mRecarregaLista = false;
+                } else {
+                    mRecarregaLista = true;
+                }
+            }
+        }
     }
 
     /**
@@ -208,6 +249,22 @@ public class ShowMoviesActivity extends AppCompatActivity
             super.onProgressUpdate(values);
         }
     }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.d(TAG, ".. onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_TIPO_FILTRO, mTipoLista);
+        outState.putString(KEY_SORT_FILTRO, mTipoSort);
+        outState.putParcelableArrayList(KEY_MOVIELIST, mMovieModelArrayList);
+    }
+
+
+
+
+
+
 
     // menus
     @Override

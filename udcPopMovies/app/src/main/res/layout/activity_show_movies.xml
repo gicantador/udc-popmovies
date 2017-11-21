@@ -29,11 +29,11 @@
             android:id="@+id/text_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:background="@color/colorPrimaryDark"
             android:fontFamily="casual"
             android:textAlignment="viewStart"
-            android:background="@color/colorPrimaryDark"
             android:textColor="@color/colorWhite"
+            android:textSize="15sp"
             android:visibility="invisible" />
 
         <android.support.v7.widget.RecyclerView

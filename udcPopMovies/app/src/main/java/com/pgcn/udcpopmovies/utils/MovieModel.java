@@ -8,10 +8,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 
 /**
  * Classe modelo para Movie
@@ -203,6 +199,7 @@ public class MovieModel implements Parcelable {
 
     @Override
     public String toString() {
+
 
         return new ToStringBuilder(this).append("title", title).append("posterPath", posterPath)
                 .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
