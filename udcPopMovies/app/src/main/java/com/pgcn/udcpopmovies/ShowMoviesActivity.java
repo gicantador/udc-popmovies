@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -21,27 +20,28 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
+import com.pgcn.udcpopmovies.service.MovieService;
 import com.pgcn.udcpopmovies.utils.EndlessRecyclerOnScrollListener;
+import com.pgcn.udcpopmovies.utils.MovieFilter;
 import com.pgcn.udcpopmovies.utils.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
-import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.URL;
 import java.util.ArrayList;
 
-public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapter.MovieAdapterOnClickHandler {
+public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDelegate,
+        MoviesAdapter.MovieAdapterOnClickHandler {
 
-    private static final String TAG = ShowMoviesActivity.class.getSimpleName();
+    private static final String TAG = ShowMoviesActivity.class.getSimpleName()+" ===== ";
+
     private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
     private RecyclerView mRecyView;
     private ProgressBar mPbLoadingIndicator;
     private CoordinatorLayout coordinatorLayout;
     private TextView mFilterTextView;
-
-    final private MoviesAdapter.MovieAdapterOnClickHandler mClickHandler = this;
 
     // inicia com filmes populares desc
     private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
@@ -57,25 +57,28 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate");
+
         setContentView(R.layout.activity_show_movies);
-        //   setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         recuperaDados(savedInstanceState);
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
 
         mFilterTextView = findViewById(R.id.text_filter);
 
-        Log.d(TAG, "=== Inicio ShowMoviesActivity");
         mRecyView = findViewById(R.id.rv_movies);
         mPbLoadingIndicator = findViewById(R.id.pb_loading_indicator);
         if (mRecarregaLista) {
             loadMovieData();
         }
-        montaGrid();
-        montaTextoAlerta();
 
         mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, this);
         mRecyView.setAdapter(mMoviestAdapter);
+        montaGrid();
+        montaTextoAlerta();
+
+
     }
 
     /**
@@ -84,6 +87,8 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * @param savedInstanceState
      */
     private void recuperaDados(Bundle savedInstanceState) {
+        Log.d(TAG, "recuperaDados");
+
         if (null != savedInstanceState) {
             if (savedInstanceState.containsKey(KEY_TIPO_FILTRO)) {
                 String tipo = savedInstanceState.getString(KEY_TIPO_FILTRO);
@@ -103,12 +108,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
             }
             if (savedInstanceState.containsKey(KEY_MOVIELIST)) {
                 mMovieModelArrayList = savedInstanceState.getParcelableArrayList(KEY_MOVIELIST);
-                if (null != mMovieModelArrayList && !mMovieModelArrayList.isEmpty()) {
-                    // se o array recuperado estiver vazio, tenta buscar novamente
-                    mRecarregaLista = false;
-                } else {
-                    mRecarregaLista = true;
-                }
+                mRecarregaLista = !(null != mMovieModelArrayList && !mMovieModelArrayList.isEmpty());
             }
         }
     }
@@ -117,10 +117,13 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * Monta do GridLayout
      */
     private void montaGrid() {
-        int nroColunas = 2;
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, nroColunas);
+        Log.d(TAG,"montaGrid");
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+
         mRecyView.setLayoutManager(gridLayoutManager);
         mRecyView.setHasFixedSize(false);
+        mRecyView.setAdapter(mMoviestAdapter);
+
         mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
             @Override
             public void onLoadMore(int current_page) {
@@ -139,12 +142,14 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * Carrega os dados de filmes de forma assíncrona
      */
     private void loadMovieData() {
-
+        Log.d(TAG,"loadMovieData");
         if (isOnline()) {
             if (0 == mCurrentPage) {
                 mCurrentPage++;
             }
-            new FetchMovieTask().execute();
+
+            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoSort, mTipoLista, mCurrentPage, mMovieModelArrayList));
+
         } else {
             mostrarFeedback(getString(R.string.erro_conexao));
         }
@@ -157,6 +162,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * @return boolean indicando se device está conectado à internet
      */
     private boolean isOnline() {
+        Log.d(TAG,"isOnline");
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null != cm) {
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -172,7 +178,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      */
     @Override
     public void onClick(MovieModel movie) {
-
+        Log.d(TAG, "onClick");
         Context context = this;
         Class destinationClass = DetailMovieActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
@@ -184,6 +190,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * Limpa a tela para nova busca
      */
     private void invalidateData() {
+        Log.d(TAG, "invalidateData()");
         mMoviestAdapter.setMovieData();
         if (null != mMovieModelArrayList) {
             mMovieModelArrayList.clear();
@@ -191,69 +198,29 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
         loadMovieData();
     }
 
-    /**
-     * Asyns task que fará as buscas em background
-     */
-    public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<MovieModel>> {
+    @Override
+    public void processFinish(Object output) {
+        Log.d(TAG,"processFinish");
 
-        @Override
-        protected void onPreExecute() {
-            // mostra loading
-            mPbLoadingIndicator.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
+        mPbLoadingIndicator.setVisibility(View.INVISIBLE);
+        mMovieModelArrayList = (ArrayList<MovieModel>) output;
 
-        @Override
-        protected void onPostExecute(ArrayList<MovieModel> movieModels) {
-            super.onPostExecute(movieModels);
-            mPbLoadingIndicator.setVisibility(View.INVISIBLE);
-            // remove loading e seta lista no adapter
-            if (movieModels != null) {
-                mMovieModelArrayList = movieModels;
-            }
-            mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, mClickHandler);
+        mMoviestAdapter = new MoviesAdapter(mMovieModelArrayList, this);
+        mRecyView.setAdapter(mMoviestAdapter);
+        montaGrid();
 
-            mRecyView.setAdapter(mMoviestAdapter);
-        }
+    }
 
-        @Override
-        protected ArrayList<MovieModel> doInBackground(String... strings) {
-
-            Log.d(TAG, "=== Inicio Asynnc FetchMovieTask - doInBackground");
-
-            URL movieRequestUrl = NetworkUtils.buildMoviesUrl(mTipoLista, mTipoSort, mCurrentPage);
-            try {
-                String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
-                if (jsonMoviesResponse != null) {
-                    if (null == mMovieModelArrayList || mMovieModelArrayList.isEmpty()) {
-                        mMovieModelArrayList = TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(ShowMoviesActivity.this, jsonMoviesResponse);
-                    } else if (!mMovieModelArrayList.isEmpty()) {
-                        mMovieModelArrayList.addAll(TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(ShowMoviesActivity.this, jsonMoviesResponse));
-                    }
-                    return mMovieModelArrayList;
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG, " doInBackground ", e);
-                e.printStackTrace();
-                return null;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-            super.onProgressUpdate(values);
-        }
+    @Override
+    public void preExecute() {
+        Log.d(TAG,"preExecute");
+        mPbLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, ".. onSaveInstanceState");
+        Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
         outState.putString(KEY_TIPO_FILTRO, mTipoLista);
         outState.putString(KEY_SORT_FILTRO, mTipoSort);
@@ -261,14 +228,10 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
     }
 
 
-
-
-
-
-
     // menus
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG,"onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -276,7 +239,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        Log.d(TAG,"onOptionsItemSelected");
         int id = item.getItemId();
 
         switch (id) {
@@ -311,6 +274,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
      * @return texto
      */
     private String montaTextoAlerta() {
+        Log.d(TAG,"montaTextoAlerta");
 
         final String nm = "action_name_";
         int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string", this.getPackageName());
@@ -327,7 +291,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements MoviesAdapt
     }
 
     private void mostrarFeedback(String message) {
-
+        Log.d(TAG,"mostrarFeedback");
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.reload, new View.OnClickListener() {

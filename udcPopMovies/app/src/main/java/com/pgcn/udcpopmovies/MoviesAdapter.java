@@ -44,9 +44,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         int layoutIdForListItem = R.layout.movie_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-        MovieViewHolder viewHolder = new MovieViewHolder(view);
 
-        return viewHolder;
+        return new MovieViewHolder(view);
     }
 
     @Override
@@ -78,6 +77,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         mMovieList = null;
         notifyDataSetChanged();
     }
+
+
 
     /**
      * Cache of the children views for a list item.

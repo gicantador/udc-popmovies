@@ -13,11 +13,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private int previousTotal = 0; // The total number of items in the dataset after the last load
     private boolean loading = true; // True if we are still waiting for the last set of data to load.
     private final GridLayoutManager mGridLayoutManager;
-    private int firstVisibleItem;
-    private int visibleItemCount;
 
     private int current_page = 1;
-    private int totalItemCount;
 
     public EndlessRecyclerOnScrollListener(GridLayoutManager mGridLayoutManager) {
         this.mGridLayoutManager = mGridLayoutManager;
@@ -27,9 +24,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        visibleItemCount = recyclerView.getChildCount();
-        totalItemCount = mGridLayoutManager.getItemCount();
-        firstVisibleItem = mGridLayoutManager.findFirstVisibleItemPosition();
+        int visibleItemCount = recyclerView.getChildCount();
+        int totalItemCount = mGridLayoutManager.getItemCount();
+        int firstVisibleItem = mGridLayoutManager.findFirstVisibleItemPosition();
 
         if (loading) {
             if (totalItemCount > previousTotal) {
