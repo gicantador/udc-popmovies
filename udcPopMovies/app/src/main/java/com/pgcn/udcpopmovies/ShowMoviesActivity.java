@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -20,11 +19,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pgcn.udcpopmovies.model.MovieFilter;
+import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
 import com.pgcn.udcpopmovies.service.MovieService;
 import com.pgcn.udcpopmovies.utils.EndlessRecyclerOnScrollListener;
-import com.pgcn.udcpopmovies.utils.MovieFilter;
-import com.pgcn.udcpopmovies.utils.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
 public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDelegate,
         MoviesAdapter.MovieAdapterOnClickHandler {
 
-    private static final String TAG = ShowMoviesActivity.class.getSimpleName()+" ===== ";
+    private static final String TAG = ShowMoviesActivity.class.getSimpleName() + " ===== ";
 
     private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
@@ -117,7 +116,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
      * Monta do GridLayout
      */
     private void montaGrid() {
-        Log.d(TAG,"montaGrid");
+        Log.d(TAG, "montaGrid");
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
 
         mRecyView.setLayoutManager(gridLayoutManager);
@@ -142,8 +141,8 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
      * Carrega os dados de filmes de forma assíncrona
      */
     private void loadMovieData() {
-        Log.d(TAG,"loadMovieData");
-        if (isOnline()) {
+        Log.d(TAG, "loadMovieData");
+        if (NetworkUtils.isOnline((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))) {
             if (0 == mCurrentPage) {
                 mCurrentPage++;
             }
@@ -156,20 +155,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         //  montaGrid();
     }
 
-    /**
-     * Verifica se device está conectado
-     *
-     * @return boolean indicando se device está conectado à internet
-     */
-    private boolean isOnline() {
-        Log.d(TAG,"isOnline");
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (null != cm) {
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return (null != netInfo && netInfo.isConnected());
-        }
-        return false;
-    }
 
     /**
      * Chama tela de detalhes de filme através de intent
@@ -200,7 +185,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     @Override
     public void processFinish(Object output) {
-        Log.d(TAG,"processFinish");
+        Log.d(TAG, "processFinish");
 
         mPbLoadingIndicator.setVisibility(View.INVISIBLE);
         mMovieModelArrayList = (ArrayList<MovieModel>) output;
@@ -213,7 +198,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     @Override
     public void preExecute() {
-        Log.d(TAG,"preExecute");
+        Log.d(TAG, "preExecute");
         mPbLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
@@ -231,7 +216,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     // menus
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG,"onCreateOptionsMenu");
+        Log.d(TAG, "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -239,7 +224,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG,"onOptionsItemSelected");
+        Log.d(TAG, "onOptionsItemSelected");
         int id = item.getItemId();
 
         switch (id) {
@@ -274,7 +259,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
      * @return texto
      */
     private String montaTextoAlerta() {
-        Log.d(TAG,"montaTextoAlerta");
+        Log.d(TAG, "montaTextoAlerta");
 
         final String nm = "action_name_";
         int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string", this.getPackageName());
@@ -291,7 +276,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     }
 
     private void mostrarFeedback(String message) {
-        Log.d(TAG,"mostrarFeedback");
+        Log.d(TAG, "mostrarFeedback");
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.reload, new View.OnClickListener() {

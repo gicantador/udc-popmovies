@@ -1,78 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dt_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/tv_movie_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:fontFamily="casual"
-            android:padding="3dp"
-            android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
-            android:textSize="40sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/iv_poster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/img_desc_movie_poster"
-            android:maxHeight="100dp"
-            android:padding="10dp"
-            android:textAlignment="center" />
-
-
-        <TextView
-            android:id="@+id/tv_synopsis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:background="@color/colorAccentLight"
-            android:fontFamily="casual"
-            android:padding="10dp"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="4dp">
+            android:orientation="vertical">
 
             <TextView
-                style="@style/Labels"
-                android:text="@string/lb_rating" />
+                android:id="@+id/tv_movie_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3sp"
+                android:background="@color/colorPrimaryDark"
+                android:fontFamily="sans-serif"
+                android:padding="10sp"
+                android:shadowColor="@color/colorAccentLight"
+                android:textAlignment="textStart"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/iv_poster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/img_desc_movie_poster"
+                    android:maxHeight="50dp"
+                    android:padding="3dp"
+                    android:textAlignment="center" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </GridLayout>
 
             <TextView
-                android:id="@+id/tv_rating"
-                style="@style/Textos" />
+                android:id="@+id/tv_synopsis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:fontFamily="sans-serif"
+
+                android:textAlignment="viewStart"
+                android:textSize="15sp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <TextView
+                    style="@style/Labels"
+                    android:labelFor="@id/tv_rating"
+                    android:text="@string/lb_rating" />
+
+                <TextView
+                    android:id="@+id/tv_rating"
+                    style="@style/Textos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <TextView
+                    style="@style/Labels"
+                    android:labelFor="@id/tv_release_date"
+                    android:text="@string/lb_release" />
+
+                <TextView
+                    android:id="@+id/tv_release_date"
+                    style="@style/Textos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <ProgressBar
+                    android:id="@+id/pb_det_loading_indicator"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:visibility="invisible" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_trailers_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="@string/lb_titulo_trailers"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- A progress bar that will be shown to users to indicate that weather data is loading -->
+                <ProgressBar
+                    android:id="@+id/pb_loading_indicator_trailers"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_msg_erro_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_nao_ha_trailer"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_review_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="3dp"
+                    android:text="@string/lb_titulo_reviews"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <!-- A progress bar that will be shown to users to indicate that weather data is loading -->
+                <ProgressBar
+                    android:id="@+id/pb_loading_indicator_reviews"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_msg_erro_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_nao_ha_review"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="4dp">
-
-            <TextView
-                style="@style/Labels"
-                android:text="@string/lb_release" />
-
-            <TextView
-                android:id="@+id/tv_release_date"
-                style="@style/Textos" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>

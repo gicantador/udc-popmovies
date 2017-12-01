@@ -1,4 +1,4 @@
-package com.pgcn.udcpopmovies.utils;
+package com.pgcn.udcpopmovies.model;
 
 import java.util.ArrayList;
 
@@ -25,24 +25,12 @@ public class MovieFilter {
         return tipoSort;
     }
 
-    public void setTipoSort(String tipoSort) {
-        this.tipoSort = tipoSort;
-    }
-
     public String getTipoLista() {
         return tipoLista;
     }
 
-    public void setTipoLista(String tipoLista) {
-        this.tipoLista = tipoLista;
-    }
-
     public int getCurrentPage() {
         return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
     }
 
     public ArrayList<MovieModel> getListaMovies() {

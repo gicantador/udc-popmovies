@@ -18,6 +18,14 @@
     <string name="erro_conexao">There is no internet connection. Do you want to try again?</string>
     <string name="label_filtro_usado">Showing films:</string>
     <string name="img_desc_movie_poster">Movie Poster</string>
+    <string name="desc_seta_play_trailer">Play trailer</string>
+    <string name="lb_titulo_trailers" translatable="false">Trailers</string>
+    <string name="tv_nao_ha_trailer"><![CDATA[< There\'s no trailer data >]]></string>
+    <string name="ac_detail_name" translatable="false">MovieDetail</string>
+    <string name="lb_titulo_reviews">Reviews</string>
+    <string name="text_aux_see_more">(click to see more…)</string>
+    <string name="text_aux_author">Author:</string>
+    <string name="tv_nao_ha_review" translatable="true"><![CDATA[< There\'s no review data >]]></string>
 
 
 </resources>

@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
-import com.pgcn.udcpopmovies.utils.MovieFilter;
-import com.pgcn.udcpopmovies.utils.MovieModel;
+import com.pgcn.udcpopmovies.model.MovieFilter;
+import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
 
@@ -51,10 +51,8 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
                 String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
                 if (jsonMoviesResponse != null) {
-                    if (null == movieFilter.getListaMovies()
-                            || movieFilter.getListaMovies().isEmpty()) {
-                        movieFilter.setListaMovies(TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(jsonMoviesResponse));
+                    if (null == movieFilter.getListaMovies() || movieFilter.getListaMovies().isEmpty()) {
+                        movieFilter.setListaMovies(TheMoviedbJsonUtils.getSimpleMovieStringsFromJson(jsonMoviesResponse));
                     } else if (!movieFilter.getListaMovies().isEmpty()) {
                         movieFilter.getListaMovies().addAll(TheMoviedbJsonUtils
                                 .getSimpleMovieStringsFromJson(jsonMoviesResponse));

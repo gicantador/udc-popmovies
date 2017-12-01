@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.pgcn.udcpopmovies.utils.MovieModel;
+import com.pgcn.udcpopmovies.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
