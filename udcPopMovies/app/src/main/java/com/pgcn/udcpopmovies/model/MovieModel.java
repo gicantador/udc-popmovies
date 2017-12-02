@@ -22,17 +22,7 @@ public class MovieModel implements Parcelable {
 
 
     public static final String LB_MOVIE = "Movie";
-    public static final Parcelable.Creator<MovieModel>
-            CREATOR = new Parcelable.Creator<MovieModel>() {
 
-        public MovieModel createFromParcel(Parcel in) {
-            return new MovieModel(in);
-        }
-
-        public MovieModel[] newArray(int size) {
-            return new MovieModel[size];
-        }
-    };
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
@@ -73,6 +63,10 @@ public class MovieModel implements Parcelable {
     @Expose
     private Double voteAverage;
 
+
+    // marcado como favorito
+    private Boolean favorito;
+
     /**
      * Construtor com principais atributos
      *
@@ -101,23 +95,15 @@ public class MovieModel implements Parcelable {
 
     }
 
-    public MovieModel(String posterPath, Boolean adult, String overview, String releaseDate,
-                      Integer id, String originalTitle, String originalLanguage,
-                      String title, String backdropPath, Double popularity, Integer voteCount,
-                      Boolean video, Double voteAverage) {
-        this.posterPath = posterPath;
-        this.adult = adult;
-        this.overview = overview;
-        this.releaseDate = releaseDate;
-        this.id = id;
-        this.originalTitle = originalTitle;
-        this.originalLanguage = originalLanguage;
-        this.title = title;
-        this.backdropPath = backdropPath;
-        this.popularity = popularity;
-        this.voteCount = voteCount;
-        this.video = video;
-        this.voteAverage = voteAverage;
+    /**
+     * @return se filme foi marcado como favorito.
+     */
+    public Boolean isFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Boolean favorito) {
+        this.favorito = favorito;
     }
 
     public String getOverview() {
@@ -144,6 +130,18 @@ public class MovieModel implements Parcelable {
         return voteAverage;
     }
 
+    public static final Parcelable.Creator<MovieModel>
+            CREATOR = new Parcelable.Creator<MovieModel>() {
+
+        public MovieModel createFromParcel(Parcel in) {
+            return new MovieModel(in);
+        }
+
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
+
     /**
      * Retorna a url da imagem do poster já completa
      *
@@ -155,8 +153,6 @@ public class MovieModel implements Parcelable {
 
     @Override
     public String toString() {
-
-
         return new ToStringBuilder(this).append("title", title).append("posterPath", posterPath)
                 .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
                 .append("id", id).append("originalTitle", originalTitle)
@@ -164,6 +160,8 @@ public class MovieModel implements Parcelable {
                 .append("popularity", popularity).append("voteCount", voteCount)
                 .append("video", video).append("voteAverage", voteAverage).toString();
     }
+
+
 
     @Override
     public int describeContents() {

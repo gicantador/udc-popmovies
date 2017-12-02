@@ -14,9 +14,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.model.ReviewModel;
@@ -40,22 +42,28 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private static final String PATTERN_TO_SHOW = "EEE, d MMM yyyy";
     private static final String KEY_LISTA_TRAILER = "KEY_LISTA_TRAILER";
     private static final String KEY_LISTA_REVIEW = "KEY_LISTA_REVIEW";
+    private static final String KEY_FAVORITO = "KEY_FAVORITO";
 
     private ProgressBar mTrailersProgressBar;
     private ProgressBar mReviewsProgressBar;
     private CoordinatorLayout coordinatorLayout;
 
     private ArrayList<TrailerModel> mTrailerList = new ArrayList<TrailerModel>();
-    // --Commented out by Inspection (01/12/2017 15:57):private MovieModel mMovie;
+    private ArrayList<ReviewModel> mReviewList = new ArrayList<ReviewModel>();
+
     private TrailersAdapter mTrailerAdapter;
     private ReviewAdapter mReviewAdapter;
     private RecyclerView mTrailerRecyView;
     private RecyclerView mReviewRecyView;
     private TextView mMsgErroTrailer;
     private TextView mMsgErroReview;
-    private ArrayList<ReviewModel> mReviewList = new ArrayList<ReviewModel>();
+
+    private ImageButton mBtStar;
+
     private boolean mRecarregaListaReview = true;
     private boolean mRecarregaListaTrailer = true;
+    private boolean mFavorito = false;
+    private int mMovieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +99,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
                         }
                         //montaGridTrailer();
                     }
+                    mMovieId = movie.getId();
                     mOriginalTitle.setText((String) getCleanField(movie.getOriginalTitle()));
                     mSynopsis.setText((String) getCleanField(movie.getOverview()));
                     mRating.setText((String) getCleanField(String.valueOf(movie.getVoteAverage())));
@@ -129,6 +138,18 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
                 mReviewList = savedInstanceState.getParcelableArrayList(KEY_LISTA_REVIEW);
                 mRecarregaListaReview = !(null != mReviewList && !mReviewList.isEmpty());
             }
+            if (savedInstanceState.containsKey(KEY_FAVORITO)) {
+                mFavorito = savedInstanceState.getBoolean(KEY_FAVORITO);
+                mudaBotaoEstrela(mFavorito);
+            }
+        }
+    }
+
+    void mudaBotaoEstrela(boolean isFavorito) {
+        if (isFavorito) {
+            mBtStar.setImageDrawable(getDrawable(R.drawable.estrela_amarela_small));
+        } else {
+            mBtStar.setImageDrawable(getDrawable(R.drawable.estrela_contorno_small));
         }
     }
 
@@ -143,6 +164,32 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
         mTrailersProgressBar = findViewById(R.id.pb_loading_indicator_trailers);
         mReviewsProgressBar = findViewById(R.id.pb_loading_indicator_reviews);
+
+        mBtStar = findViewById(R.id.bt_star);
+        mBtStar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mFavorito = !mFavorito;
+                mudaBotaoEstrela(mFavorito);
+                mostrarFeedbackStar(mFavorito);
+                salvarFilmeComoFavorito(mFavorito, mMovieId);
+
+            }
+        });
+    }
+
+    private void salvarFilmeComoFavorito(boolean mFavorito, int mMovieId) {
+        //TODO: salvar estado
+        mostrarFeedbackStar(mFavorito);
+    }
+
+    private void mostrarFeedbackStar(boolean mFavorito) {
+        String msg;
+        if (mFavorito) {
+            msg = getString(R.string.txt_feeedback_star_add);
+        } else {
+            msg = getString(R.string.txt_feeedback_star_rem);
+        }
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void obterTrailers(int movieId) {
@@ -276,8 +323,6 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     public void preExecute() {
         Log.d(TAG, "preExecute");
         mTrailersProgressBar.setVisibility(View.VISIBLE);
-
-
     }
 
     /**
@@ -333,5 +378,6 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_LISTA_TRAILER, mTrailerList);
         outState.putParcelableArrayList(KEY_LISTA_REVIEW, mReviewList);
+        outState.putBoolean(KEY_FAVORITO, mFavorito);
     }
 }

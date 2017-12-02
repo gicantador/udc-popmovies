@@ -12,4 +12,6 @@
     <string name="text_aux_see_more">(click para ver mais…)</string>
     <string name="text_aux_author">Autor:</string>
     <string name="tv_nao_ha_review"><![CDATA[< Não há reviews >]]></string>
+    <string name="txt_feeedback_star_add">O filme foi adicionado aos seus favoritos!</string>
+    <string name="txt_feeedback_star_rem">O filme foi removido dos seus favoritos!</string>
 </resources>
