@@ -64,8 +64,8 @@ public class MovieModel implements Parcelable {
     private Double voteAverage;
 
 
-    // marcado como favorito
-    private Boolean favorito;
+    // marcado como favorito? por padrao eh false
+    private Boolean favorito = false;
 
     /**
      * Construtor com principais atributos

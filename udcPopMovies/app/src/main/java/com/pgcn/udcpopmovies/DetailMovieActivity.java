@@ -3,6 +3,7 @@ package com.pgcn.udcpopmovies;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -20,6 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
+import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.model.ReviewModel;
 import com.pgcn.udcpopmovies.model.TrailerModel;
@@ -37,7 +41,9 @@ import java.util.Date;
 
 public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskDelegate,
         TrailersAdapter.TrailersAdapterOnClickHandler, ReviewAdapter.ReviewAdapterOnClickHandler {
+
     private static final String TAG = DetailMovieActivity.class.getSimpleName();
+
     private static final String RETURNED_PATTERN = "yyyy-MM-dd";
     private static final String PATTERN_TO_SHOW = "EEE, d MMM yyyy";
     private static final String KEY_LISTA_TRAILER = "KEY_LISTA_TRAILER";
@@ -63,7 +69,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private boolean mRecarregaListaReview = true;
     private boolean mRecarregaListaTrailer = true;
     private boolean mFavorito = false;
-    private int mMovieId;
+    private MovieModel mMovie;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,32 +93,29 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(MovieModel.LB_MOVIE)) {
 
-                MovieModel movie = intentThatStartedThisActivity.getParcelableExtra(MovieModel.LB_MOVIE);
-                if (null != movie) {
-                    Log.d(TAG, " LB_MOVIE SELECIONADO :" + movie.toString());
+                mMovie = intentThatStartedThisActivity.getParcelableExtra(MovieModel.LB_MOVIE);
+                if (null != mMovie) {
+                    Log.d(TAG, " LB_MOVIE SELECIONADO :" + mMovie.toString());
 
-                    if (0 != movie.getId()) {
+                    if (0 != mMovie.getId()) {
                         if (mRecarregaListaTrailer) {
-                            obterTrailers(movie.getId());
+                            obterTrailers(mMovie.getId());
                         }
                         if (mRecarregaListaReview) {
-                            obterReviews(movie.getId());
+                            obterReviews(mMovie.getId());
                         }
-                        //montaGridTrailer();
                     }
-                    mMovieId = movie.getId();
-                    mOriginalTitle.setText((String) getCleanField(movie.getOriginalTitle()));
-                    mSynopsis.setText((String) getCleanField(movie.getOverview()));
-                    mRating.setText((String) getCleanField(String.valueOf(movie.getVoteAverage())));
-                    mReleaseDate.setText(formataDataRelease(movie.getReleaseDate()));
+                    mudaBotaoEstrela(mMovie.isFavorito());
+                    mOriginalTitle.setText((String) getCleanField(mMovie.getOriginalTitle()));
+                    mSynopsis.setText((String) getCleanField(mMovie.getOverview()));
+                    mRating.setText((String) getCleanField(String.valueOf(mMovie.getVoteAverage())));
+                    mReleaseDate.setText(formataDataRelease(mMovie.getReleaseDate()));
 
                     // monta a imagem do poster
-                    String imagePath = movie.getPosterPath();
+                    String imagePath = mMovie.getPosterPath();
                     if (imagePath != null && !imagePath.isEmpty()) {
                         Picasso.with(this).load(imagePath).placeholder(R.drawable.placeholder_empty).into(mPoster);
                     }
-
-
                 }
             }
         }
@@ -168,18 +172,30 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         mBtStar = findViewById(R.id.bt_star);
         mBtStar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mFavorito = !mFavorito;
-                mudaBotaoEstrela(mFavorito);
-                mostrarFeedbackStar(mFavorito);
-                salvarFilmeComoFavorito(mFavorito, mMovieId);
+                boolean fav = mMovie.isFavorito();
+                mMovie.setFavorito(!fav);
+                salvarFilmeComoFavorito(mMovie.isFavorito());
+                mudaBotaoEstrela(mMovie.isFavorito());
+                mostrarFeedbackStar(mMovie.isFavorito());
 
             }
         });
     }
 
-    private void salvarFilmeComoFavorito(boolean mFavorito, int mMovieId) {
-        //TODO: salvar estado
-        mostrarFeedbackStar(mFavorito);
+
+    private void salvarFilmeComoFavorito(boolean fav) {
+        MoviesDbHelper dbHelper = new MoviesDbHelper(this);
+        mDb = dbHelper.getWritableDatabase();
+        try {
+            if (fav) {
+                FavoriteMoviesDatabaseUtil.insertData(mDb, mMovie);
+            } else {
+                FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getId());
+            }
+            mostrarFeedbackStar(fav);
+        } catch (MovieServiceException e) {
+            e.printStackTrace();
+        }
     }
 
     private void mostrarFeedbackStar(boolean mFavorito) {
