@@ -20,7 +20,7 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w780";
+    private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w342";
 
     // connection configuration
     private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
