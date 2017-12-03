@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
+import com.pgcn.udcpopmovies.data.MoviesDbHelper;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
@@ -52,6 +54,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
     private static final String KEY_SORT_FILTRO = "KEY_SORT_FILTRO";
     private static final String KEY_MOVIELIST = "KEY_MOVIELIST";
+    private MoviesDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +126,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         mRecyView.setHasFixedSize(false);
         mRecyView.setAdapter(mMoviestAdapter);
 
-        mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
+  /*      mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
             @Override
             public void onLoadMore(int current_page) {
                 Log.d(TAG, "onLoadMore" + current_page);
@@ -133,7 +136,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 }
             }
 
-        });
+        });*/
     }
 
 
@@ -147,7 +150,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 mCurrentPage++;
             }
 
-            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoSort, mTipoLista, mCurrentPage, mMovieModelArrayList));
+            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoSort, mTipoLista, mCurrentPage, mMovieModelArrayList, mDbHelper));
 
         } else {
             mostrarFeedback(getString(R.string.erro_conexao));
@@ -240,6 +243,11 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
             case R.id.action_sort_desc:
                 mTipoSort = NetworkUtils.SORT_DESC;
                 break;
+            case R.id.action_favoritos:
+                mTipoLista = FavoriteMoviesDatabaseUtil.KEY_FAVORITOS;
+                mDbHelper = new MoviesDbHelper(this);
+                break;
+
             default:
                 mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
                 mTipoSort = NetworkUtils.SORT_ASC;

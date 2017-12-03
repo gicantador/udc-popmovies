@@ -1,5 +1,7 @@
 package com.pgcn.udcpopmovies.model;
 
+import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+
 import java.util.ArrayList;
 
 /**
@@ -13,12 +15,15 @@ public class MovieFilter {
     private String tipoLista;
     private int currentPage;
     private ArrayList<MovieModel> listaMovies;
+    private MoviesDbHelper dbHelper;
 
-    public MovieFilter(String tipoSort, String tipoLista, int currentPage, ArrayList<MovieModel> listaMovies) {
+    public MovieFilter(String tipoSort, String tipoLista, int currentPage, ArrayList<MovieModel> listaMovies,
+                       MoviesDbHelper moviesDbHelper) {
         this.tipoSort = tipoSort;
         this.tipoLista = tipoLista;
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
+        this.dbHelper = moviesDbHelper;
     }
 
     public String getTipoSort() {
@@ -39,5 +44,9 @@ public class MovieFilter {
 
     public void setListaMovies(ArrayList<MovieModel> listaMovies) {
         this.listaMovies = listaMovies;
+    }
+
+    public MoviesDbHelper getDbHelper() {
+        return dbHelper;
     }
 }

@@ -1,6 +1,7 @@
 package com.pgcn.udcpopmovies.data;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.pgcn.udcpopmovies.model.MovieModel;
 
 public class FavoriteMoviesDatabaseUtil {
     private static final String TAG = FavoriteMoviesDatabaseUtil.class.getSimpleName();
+    public static final String KEY_FAVORITOS = "favoritos";
 
     /**
      * Cria uma nova linha na tabela de filmes favoritos do usu[ario. Salva os dados do filme para que nao seja
@@ -26,7 +28,7 @@ public class FavoriteMoviesDatabaseUtil {
 
     public static void insertData(SQLiteDatabase db, MovieModel movie) throws MovieServiceException {
 
-        Log.d(TAG, "=== insertData, filme " + movie);
+        Log.d(TAG, "=== insertData, filme " + movie.getOriginalTitle());
         if (db == null) {
             return;
         }
@@ -40,7 +42,12 @@ public class FavoriteMoviesDatabaseUtil {
         cv.put(MoviesContract.FavoriteMovies.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         try {
             db.beginTransaction();
-            db.insert(MoviesContract.FavoriteMovies.TABLE_NAME, null, cv);
+            long teste = db.insert(MoviesContract.FavoriteMovies.TABLE_NAME, null, cv);
+            Log.d(TAG, "=== insertData, teste " + teste);
+            if (teste <= 0) {
+                throw new MovieServiceException("ERRO AO INSERIR DADOS " + cv.toString());
+            }
+            db.setTransactionSuccessful();
         } catch (SQLException e) {
             throw new MovieServiceException("ERRO AO INSERIR DADOS " + cv.toString(), e);
         } finally {
@@ -51,17 +58,36 @@ public class FavoriteMoviesDatabaseUtil {
     public static void removeData(SQLiteDatabase db, Integer id) throws MovieServiceException {
         Log.d(TAG, "=== removeData, filme " + id);
 
-        ContentValues cv = new ContentValues();
-        cv.put(MoviesContract.FavoriteMovies.COLUMN_API_ID, id);
         try {
             db.beginTransaction();
             db.delete(MoviesContract.FavoriteMovies.TABLE_NAME,
-                    MoviesContract.FavoriteMovies.COLUMN_API_ID + "=?",
-                    new String[]{String.valueOf(id)});
+                    MoviesContract.FavoriteMovies._ID + "=?",
+                    new String[]{Integer.toString(id)});
+            db.setTransactionSuccessful();
         } catch (SQLException e) {
-            throw new MovieServiceException("ERRO AO remover DADOS " + cv.toString(), e);
+            throw new MovieServiceException("ERRO AO remover DADOS filme" + id, e);
         } finally {
             db.endTransaction();
         }
     }
+
+    /**
+     * retorna todos os filmes favoritos guardados no banco de dados
+     *
+     * @param db
+     * @return
+     */
+    public static Cursor getAllFavoriteMovies(SQLiteDatabase db) {
+        return db.query(
+                MoviesContract.FavoriteMovies.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                MoviesContract.FavoriteMovies.COLUMN_DTA_CRIACAO
+        );
+    }
+
+
 }

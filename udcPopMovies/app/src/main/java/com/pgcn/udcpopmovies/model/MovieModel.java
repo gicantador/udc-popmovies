@@ -23,6 +23,7 @@ public class MovieModel implements Parcelable {
 
     public static final String LB_MOVIE = "Movie";
 
+
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
@@ -50,9 +51,9 @@ public class MovieModel implements Parcelable {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
-    @SerializedName("popularity")
-    @Expose
-    private Double popularity;
+    //  @SerializedName("popularity")
+    //   @Expose
+    //   private Double popularity;
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
@@ -66,7 +67,7 @@ public class MovieModel implements Parcelable {
 
     // marcado como favorito? por padrao eh false
     private Boolean favorito = false;
-
+    private int databaseId;
     /**
      * Construtor com principais atributos
      *
@@ -90,9 +91,25 @@ public class MovieModel implements Parcelable {
         originalLanguage = in.readString();
         originalTitle = in.readString();
         backdropPath = in.readString();
-        popularity = in.readDouble();
+        // popularity = in.readDouble();
         voteAverage = in.readDouble();
+        databaseId = in.readInt();
+        favorito = (Boolean) in.readValue(null);
+    }
 
+    public MovieModel() {
+    }
+
+    public MovieModel(int apiId, String title, String overview, String posterPath,
+                      String releaseDate, Double averageVoted, int dataId, boolean fav) {
+        this.id = apiId;
+        this.originalTitle = title;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+        this.voteAverage = averageVoted;
+        this.databaseId = dataId;
+        this.favorito = fav;
     }
 
     /**
@@ -104,6 +121,14 @@ public class MovieModel implements Parcelable {
 
     public void setFavorito(Boolean favorito) {
         this.favorito = favorito;
+    }
+
+    public int getDatabaseId() {
+        return databaseId;
+    }
+
+    public void setDatabaseId(int databaseId) {
+        this.databaseId = databaseId;
     }
 
     public String getOverview() {
@@ -148,8 +173,13 @@ public class MovieModel implements Parcelable {
      * @return
      */
     public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getRootPosterPath() {
         return NetworkUtils.buildImageUrl(posterPath);
     }
+
 
     @Override
     public String toString() {
@@ -157,7 +187,8 @@ public class MovieModel implements Parcelable {
                 .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
                 .append("id", id).append("originalTitle", originalTitle)
                 .append("originalLanguage", originalLanguage).append("backdropPath", backdropPath)
-                .append("popularity", popularity).append("voteCount", voteCount)
+                //  .append("popularity", popularity)
+                .append("voteCount", voteCount)
                 .append("video", video).append("voteAverage", voteAverage).toString();
     }
 
@@ -177,8 +208,10 @@ public class MovieModel implements Parcelable {
         dest.writeString(originalLanguage);
         dest.writeString(originalTitle);
         dest.writeString(backdropPath);
-        dest.writeDouble(popularity);
+        // dest.writeDouble(popularity);
         dest.writeDouble(voteAverage);
+        dest.writeInt(databaseId);
+        dest.writeValue(favorito);
     }
 
 

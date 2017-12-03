@@ -112,7 +112,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
                     mReleaseDate.setText(formataDataRelease(mMovie.getReleaseDate()));
 
                     // monta a imagem do poster
-                    String imagePath = mMovie.getPosterPath();
+                    String imagePath = mMovie.getRootPosterPath();
                     if (imagePath != null && !imagePath.isEmpty()) {
                         Picasso.with(this).load(imagePath).placeholder(R.drawable.placeholder_empty).into(mPoster);
                     }
@@ -150,6 +150,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     }
 
     void mudaBotaoEstrela(boolean isFavorito) {
+        Log.d(TAG, " mudaBotaoEstrela " + isFavorito);
         if (isFavorito) {
             mBtStar.setImageDrawable(getDrawable(R.drawable.estrela_amarela_small));
         } else {
@@ -184,13 +185,14 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
 
     private void salvarFilmeComoFavorito(boolean fav) {
+
         MoviesDbHelper dbHelper = new MoviesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
         try {
             if (fav) {
                 FavoriteMoviesDatabaseUtil.insertData(mDb, mMovie);
             } else {
-                FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getId());
+                FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getDatabaseId());
             }
             mostrarFeedbackStar(fav);
         } catch (MovieServiceException e) {
