@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by Giselle on 02/12/2017.
  */
 
-public class MoviesContract {
+class MoviesContract {
 
 
     public static final class FavoriteMovies implements BaseColumns {

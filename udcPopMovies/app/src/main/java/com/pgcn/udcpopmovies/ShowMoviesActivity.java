@@ -48,7 +48,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private String mTipoSort = NetworkUtils.SORT_DESC;
 
     private int mCurrentPage = 0;
-    private boolean mRecarregaLista = true;
+    private final boolean mRecarregaLista = true;
 
     private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
     private static final String KEY_SORT_FILTRO = "KEY_SORT_FILTRO";

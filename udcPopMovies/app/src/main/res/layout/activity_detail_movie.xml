@@ -57,6 +57,8 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorWhite"
                         android:clickable="true"
+                        android:contentDescription="@string/img_des_star"
+                        android:focusable="true"
                         android:src="@drawable/estrela_contorno_small" />
 
 

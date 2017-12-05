@@ -32,6 +32,7 @@
     <string name="txt_feeedback_star_rem">The movie has been removed from your favorites!</string>
     <string name="action_favoritos">Favorites</string>
     <string name="txt_feeedback_erro">Ocorreu um erro. Não foi possivel completar a ação.</string>
+    <string name="img_des_star">Marcar favorito</string>
 
 
 </resources>

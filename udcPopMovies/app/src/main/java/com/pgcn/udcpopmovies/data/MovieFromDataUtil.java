@@ -40,7 +40,7 @@ public class MovieFromDataUtil {
                 listaFilmes.add(movie);
                 Log.d(TAG, "listaFilmes tem " + listaFilmes.size());
             }
-
+            cursor.close();
         }
         return listaFilmes;
     }

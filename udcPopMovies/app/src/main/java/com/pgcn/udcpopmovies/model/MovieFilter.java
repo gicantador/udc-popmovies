@@ -11,11 +11,11 @@ import java.util.ArrayList;
  */
 public class MovieFilter {
 
-    private String tipoSort;
-    private String tipoLista;
-    private int currentPage;
+    private final String tipoSort;
+    private final String tipoLista;
+    private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
-    private MoviesDbHelper dbHelper;
+    private final MoviesDbHelper dbHelper;
 
     public MovieFilter(String tipoSort, String tipoLista, int currentPage, ArrayList<MovieModel> listaMovies,
                        MoviesDbHelper moviesDbHelper) {

@@ -30,7 +30,8 @@
             android:id="@+id/text_filter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="casual"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/colorWhite"
             android:textAlignment="viewStart"
             android:textColorHighlight="@color/colorAccentLight"
 

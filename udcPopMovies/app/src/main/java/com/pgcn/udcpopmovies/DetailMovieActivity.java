@@ -160,7 +160,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         }
     }
 
-    void mudaBotaoEstrela(boolean isFavorito) {
+    private void mudaBotaoEstrela(boolean isFavorito) {
         Log.d(TAG, " mudaBotaoEstrela " + isFavorito);
         if (isFavorito) {
             mBtStar.setImageDrawable(getDrawable(R.drawable.estrela_amarela_small));

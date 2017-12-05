@@ -15,3 +15,5 @@ public final class APIConfigurationConstants {
 
 																			 
 ---------------------------------------------------------------------------
+
+Grata a https://www.iconfinder.com/ pelo icone da app.

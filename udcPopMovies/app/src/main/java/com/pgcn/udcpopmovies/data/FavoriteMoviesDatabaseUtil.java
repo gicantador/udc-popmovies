@@ -100,7 +100,7 @@ public class FavoriteMoviesDatabaseUtil {
      * @return
      */
     public static boolean buscaFavorito(SQLiteDatabase mDb, Integer id) {
-        Cursor cursor = null;
+        Cursor cursor;
         cursor = mDb.query(
                 MoviesContract.FavoriteMovies.TABLE_NAME,
                 null,
@@ -109,9 +109,12 @@ public class FavoriteMoviesDatabaseUtil {
                 null,
                 null,
                 MoviesContract.FavoriteMovies.COLUMN_DTA_CRIACAO);
+        boolean isfav = false;
         if (null != cursor) {
-            return cursor.getCount() > 0;
+            isfav = cursor.getCount() > 0;
+            cursor.close();
         }
-        return false;
+
+        return isfav;
     }
 }
