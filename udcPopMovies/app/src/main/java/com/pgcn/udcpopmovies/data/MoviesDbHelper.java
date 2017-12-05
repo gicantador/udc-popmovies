@@ -39,12 +39,6 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade ");
-        // For now simply drop the table and create a new one. This means if you change the
-        // DATABASE_VERSION the table will be dropped.
-        // In a production app, this method might be modified to ALTER the table
-        // instead of dropping it, so that existing data is not deleted.
-
-        // TODO: ALTER TABLE
         db.execSQL("DROP TABLE IF EXISTS " + MoviesContract.FavoriteMovies.TABLE_NAME);
         onCreate(db);
     }

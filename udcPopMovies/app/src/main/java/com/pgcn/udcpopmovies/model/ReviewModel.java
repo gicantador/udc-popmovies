@@ -16,10 +16,6 @@ public class ReviewModel implements Parcelable {
 
     public final static Parcelable.Creator<ReviewModel> CREATOR = new Creator<ReviewModel>() {
 
-
-        @SuppressWarnings({
-                "unchecked"
-        })
         public ReviewModel createFromParcel(Parcel in) {
             return new ReviewModel(in);
         }

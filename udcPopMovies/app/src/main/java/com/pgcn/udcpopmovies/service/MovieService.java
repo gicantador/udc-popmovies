@@ -95,9 +95,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
 
     @Override
     protected void onPostExecute(ArrayList<MovieModel> movies) {
-        //Neste ponto, no onPostExecute, chamamos o método `processFinish` do delegate para finalizar o processamento da requisição
-        //Aqui, conseguimos isolar responsabilidades! A classe de serviço agora é responsavel apenas por executar a requisição
-        //e avisar quando estiver pronta para ser processada.
+
         super.onPostExecute(movies);
         if (delegate != null)
             delegate.processFinish(movies);

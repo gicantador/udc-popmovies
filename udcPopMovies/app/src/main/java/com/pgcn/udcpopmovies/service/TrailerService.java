@@ -64,9 +64,7 @@ public class TrailerService extends AsyncTask<Object, String, ArrayList<TrailerM
 
     @Override
     protected void onPostExecute(ArrayList<TrailerModel> trailers) {
-        //Neste ponto, no onPostExecute, chamamos o método `processFinish` do delegate para finalizar o processamento da requisição
-        //Aqui, conseguimos isolar responsabilidades! A classe de serviço agora é responsavel apenas por executar a requisição
-        //e avisar quando estiver pronta para ser processada.
+
         super.onPostExecute(trailers);
         if (delegate != null)
             delegate.processFinish(trailers);

@@ -15,6 +15,12 @@ import java.util.ArrayList;
 public class MovieFromDataUtil {
     private static final String TAG = MovieFromDataUtil.class.getSimpleName();
 
+    /**
+     * Retorna a lista de filmes favoritos
+     *
+     * @param dbHelper
+     * @return
+     */
     public static ArrayList<MovieModel> retrieveAllFavoriteMovies(MoviesDbHelper dbHelper) {
         Log.d(TAG, "retrieveAllFavoriteMovies ");
         ArrayList<MovieModel> listaFilmes = new ArrayList<MovieModel>();
@@ -45,6 +51,12 @@ public class MovieFromDataUtil {
         return listaFilmes;
     }
 
+    /**
+     * Busca os filmes favoritos
+     *
+     * @param dbHelper
+     * @return
+     */
     private static Cursor getAllmovies(MoviesDbHelper dbHelper) {
         Log.d(TAG, "getAllmovies ");
         SQLiteDatabase db;
@@ -54,10 +66,8 @@ public class MovieFromDataUtil {
         Cursor cs = FavoriteMoviesDatabaseUtil.getAllFavoriteMovies(db);
 
         Log.d(TAG, "Cursor cs " + cs);
-        SQLiteDatabase db2 = dbHelper.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + MoviesContract.FavoriteMovies.TABLE_NAME, null);
-        Log.d(TAG, "Cursor res " + res);
-        return res;
+
+        return cs;
 
     }
 }

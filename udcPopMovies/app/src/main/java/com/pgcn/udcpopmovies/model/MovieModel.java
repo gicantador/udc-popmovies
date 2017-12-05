@@ -51,9 +51,6 @@ public class MovieModel implements Parcelable {
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
-    //  @SerializedName("popularity")
-    //   @Expose
-    //   private Double popularity;
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
@@ -91,7 +88,6 @@ public class MovieModel implements Parcelable {
         originalLanguage = in.readString();
         originalTitle = in.readString();
         backdropPath = in.readString();
-        // popularity = in.readDouble();
         voteAverage = in.readDouble();
         databaseId = in.readInt();
         favorito = (Boolean) in.readValue(null);
@@ -187,7 +183,6 @@ public class MovieModel implements Parcelable {
                 .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
                 .append("id", id).append("originalTitle", originalTitle)
                 .append("originalLanguage", originalLanguage).append("backdropPath", backdropPath)
-                //  .append("popularity", popularity)
                 .append("voteCount", voteCount)
                 .append("video", video).append("voteAverage", voteAverage).toString();
     }
@@ -208,7 +203,6 @@ public class MovieModel implements Parcelable {
         dest.writeString(originalLanguage);
         dest.writeString(originalTitle);
         dest.writeString(backdropPath);
-        // dest.writeDouble(popularity);
         dest.writeDouble(voteAverage);
         dest.writeInt(databaseId);
         dest.writeValue(favorito);

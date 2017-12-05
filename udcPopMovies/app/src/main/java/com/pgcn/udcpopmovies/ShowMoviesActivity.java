@@ -129,17 +129,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         mRecyView.setHasFixedSize(false);
         mRecyView.setAdapter(mMoviestAdapter);
 
-  /*      mRecyView.setOnScrollListener(new EndlessRecyclerOnScrollListener((GridLayoutManager) mRecyView.getLayoutManager()) {
-            @Override
-            public void onLoadMore(int current_page) {
-                Log.d(TAG, "onLoadMore" + current_page);
-                mCurrentPage++;
-                if (0 != current_page) {
-                    loadMovieData();
-                }
-            }
 
-        });*/
     }
 
 

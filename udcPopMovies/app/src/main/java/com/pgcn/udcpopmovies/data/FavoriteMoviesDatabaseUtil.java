@@ -25,7 +25,6 @@ public class FavoriteMoviesDatabaseUtil {
      * @param movie o filme
      * @throws MovieServiceException caso ocorra erro
      */
-
     public static void insertData(SQLiteDatabase db, MovieModel movie) throws MovieServiceException {
 
         Log.d(TAG, "=== insertData, filme " + movie.getOriginalTitle());
@@ -37,7 +36,6 @@ public class FavoriteMoviesDatabaseUtil {
         cv.put(MoviesContract.FavoriteMovies.COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
         cv.put(MoviesContract.FavoriteMovies.COLUMN_POSTER_PATH, movie.getPosterPath());
         cv.put(MoviesContract.FavoriteMovies.COLUMN_OVERVIEW, movie.getOverview());
-        cv.put(MoviesContract.FavoriteMovies.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         cv.put(MoviesContract.FavoriteMovies.COLUMN_VOTE_AVERAGE, (null != movie.getVoteAverage()) ? String.valueOf(movie.getVoteAverage()) : null);
         cv.put(MoviesContract.FavoriteMovies.COLUMN_RELEASE_DATE, movie.getReleaseDate());
         try {
@@ -55,6 +53,13 @@ public class FavoriteMoviesDatabaseUtil {
         }
     }
 
+    /**
+     * remove o filme da lista de favoritos
+     *
+     * @param db base de dados
+     * @param id id do filme
+     * @throws MovieServiceException
+     */
     public static void removeData(SQLiteDatabase db, Integer id) throws MovieServiceException {
         Log.d(TAG, "=== removeData, filme " + id);
 
