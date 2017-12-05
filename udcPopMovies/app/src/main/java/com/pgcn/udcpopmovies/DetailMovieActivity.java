@@ -105,6 +105,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
                             obterReviews(mMovie.getId());
                         }
                     }
+                    verificaSeFavorito(mMovie.getId());
                     mudaBotaoEstrela(mMovie.isFavorito());
                     mOriginalTitle.setText((String) getCleanField(mMovie.getOriginalTitle()));
                     mSynopsis.setText((String) getCleanField(mMovie.getOverview()));
@@ -127,6 +128,16 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         mReviewAdapter = new ReviewAdapter(mReviewList, this);
         mReviewRecyView.setAdapter(mReviewAdapter);
         montaGridReview();
+    }
+
+    private void verificaSeFavorito(Integer id) {
+        if (!mMovie.isFavorito()) {
+            MoviesDbHelper dbHelper = new MoviesDbHelper(this);
+            mDb = dbHelper.getReadableDatabase();
+            if (FavoriteMoviesDatabaseUtil.buscaFavorito(mDb, id)) {
+                mMovie.setFavorito(true);
+            }
+        }
     }
 
     private void recuperaDados(Bundle savedInstanceState) {
@@ -196,6 +207,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             }
             mostrarFeedbackStar(fav);
         } catch (MovieServiceException e) {
+            Toast.makeText(this, getString(R.string.txt_feeedback_erro), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -398,4 +410,5 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         outState.putParcelableArrayList(KEY_LISTA_REVIEW, mReviewList);
         outState.putBoolean(KEY_FAVORITO, mFavorito);
     }
+
 }

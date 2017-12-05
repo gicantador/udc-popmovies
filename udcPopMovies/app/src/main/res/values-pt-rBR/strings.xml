@@ -15,4 +15,5 @@
     <string name="txt_feeedback_star_add">O filme foi adicionado aos seus favoritos!</string>
     <string name="txt_feeedback_star_rem">O filme foi removido dos seus favoritos!</string>
     <string name="action_favoritos">Favoritos</string>
+    <string name="txt_feeedback_erro">Ocorreu um erro. Não foi possivel completar a ação.</string>
 </resources>

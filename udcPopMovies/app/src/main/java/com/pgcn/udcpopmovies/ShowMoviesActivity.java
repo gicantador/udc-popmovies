@@ -25,7 +25,6 @@ import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
 import com.pgcn.udcpopmovies.service.MovieService;
-import com.pgcn.udcpopmovies.utils.EndlessRecyclerOnScrollListener;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -108,10 +107,14 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                     mTipoSort = tipo;
                 }
             }
-            if (savedInstanceState.containsKey(KEY_MOVIELIST)) {
+            if (mTipoLista.equals(FavoriteMoviesDatabaseUtil.KEY_FAVORITOS)) {
+                mDbHelper = new MoviesDbHelper(this);
+            }
+
+         /*   if (savedInstanceState.containsKey(KEY_MOVIELIST)) {
                 mMovieModelArrayList = savedInstanceState.getParcelableArrayList(KEY_MOVIELIST);
                 mRecarregaLista = !(null != mMovieModelArrayList && !mMovieModelArrayList.isEmpty());
-            }
+            }*/
         }
     }
 
@@ -212,7 +215,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         super.onSaveInstanceState(outState);
         outState.putString(KEY_TIPO_FILTRO, mTipoLista);
         outState.putString(KEY_SORT_FILTRO, mTipoSort);
-        outState.putParcelableArrayList(KEY_MOVIELIST, mMovieModelArrayList);
+        //  outState.putParcelableArrayList(KEY_MOVIELIST, mMovieModelArrayList);
     }
 
 
@@ -303,6 +306,15 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         textView.setTextColor(Color.YELLOW);
         snackbar.show();
 
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume mTipoLista" + mTipoLista);
+        if (mTipoLista.equals(FavoriteMoviesDatabaseUtil.KEY_FAVORITOS)) {
+            invalidateData();
+        }
+        super.onResume();
     }
 }
 

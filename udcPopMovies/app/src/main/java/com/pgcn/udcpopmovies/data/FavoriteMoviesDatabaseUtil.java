@@ -60,9 +60,12 @@ public class FavoriteMoviesDatabaseUtil {
 
         try {
             db.beginTransaction();
-            db.delete(MoviesContract.FavoriteMovies.TABLE_NAME,
+            int teste = db.delete(MoviesContract.FavoriteMovies.TABLE_NAME,
                     MoviesContract.FavoriteMovies._ID + "=?",
                     new String[]{Integer.toString(id)});
+            if (teste <= 0) {
+                throw new MovieServiceException("ERRO AO REMOVER DADOS ");
+            }
             db.setTransactionSuccessful();
         } catch (SQLException e) {
             throw new MovieServiceException("ERRO AO remover DADOS filme" + id, e);
@@ -89,5 +92,26 @@ public class FavoriteMoviesDatabaseUtil {
         );
     }
 
-
+    /**
+     * Verifica se um determinado filme já esta marcado como favorito
+     *
+     * @param mDb
+     * @param id
+     * @return
+     */
+    public static boolean buscaFavorito(SQLiteDatabase mDb, Integer id) {
+        Cursor cursor = null;
+        cursor = mDb.query(
+                MoviesContract.FavoriteMovies.TABLE_NAME,
+                null,
+                MoviesContract.FavoriteMovies.COLUMN_API_ID + "=?",
+                new String[]{Integer.toString(id)},
+                null,
+                null,
+                MoviesContract.FavoriteMovies.COLUMN_DTA_CRIACAO);
+        if (null != cursor) {
+            return cursor.getCount() > 0;
+        }
+        return false;
+    }
 }
