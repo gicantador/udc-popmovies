@@ -4,6 +4,5 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:adjustViewBounds="true"
-    android:contentDescription="@string/img_desc_movie_poster"
-    android:padding="3sp" />
+    android:contentDescription="@string/img_desc_movie_poster" />
 

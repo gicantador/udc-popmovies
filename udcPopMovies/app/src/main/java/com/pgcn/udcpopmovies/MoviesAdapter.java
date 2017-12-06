@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.pgcn.udcpopmovies.utils.MovieModel;
+import com.pgcn.udcpopmovies.model.MovieModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,10 +56,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
             holder.movieId = movie.getId();
 
-            String imagePath = movie.getPosterPath();
+            String imagePath = movie.getRootPosterPath();
             if (imagePath != null && !imagePath.isEmpty()) {
-                Picasso.with(holder.moviePoster.getContext()).load(imagePath).placeholder(R.drawable.progress_animation).into(holder.moviePoster);
-                // Log.d(TAG, "Imagem: " + imagePath);
+                Picasso.with(holder.moviePoster.getContext()).load(imagePath).placeholder(R.drawable.placeholder_empty).into(holder.moviePoster);
+                Log.d(TAG, "Imagem: " + imagePath);
             }
         }
     }

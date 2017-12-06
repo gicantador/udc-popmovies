@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/udc-popmovies.iml" filepath="$PROJECT_DIR$/.idea/udc-popmovies.iml" />
+      <module fileurl="file://C:\Users\Giselle\AndroidStudioProjects\udc-popmovies-p2\.idea\udc-popmovies.iml" filepath="C:\Users\Giselle\AndroidStudioProjects\udc-popmovies-p2\.idea\udc-popmovies.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/udc-popmovies-p2.iml" filepath="$PROJECT_DIR$/.idea/udc-popmovies-p2.iml" />
     </modules>
   </component>
 </project>

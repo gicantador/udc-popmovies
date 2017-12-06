@@ -4,12 +4,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pgcn.udcpopmovies.data.MovieFromDataUtil;
+import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
-import com.pgcn.udcpopmovies.utils.MovieFilter;
-import com.pgcn.udcpopmovies.utils.MovieModel;
+import com.pgcn.udcpopmovies.model.MovieFilter;
+import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -46,37 +52,50 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             MovieFilter movieFilter = (MovieFilter) objects[0];
             if (null != movieFilter) {
 
-                URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoLista(),
-                        movieFilter.getTipoSort(), movieFilter.getCurrentPage());
-                String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
-
-                if (jsonMoviesResponse != null) {
-                    if (null == movieFilter.getListaMovies()
-                            || movieFilter.getListaMovies().isEmpty()) {
-                        movieFilter.setListaMovies(TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(jsonMoviesResponse));
-                    } else if (!movieFilter.getListaMovies().isEmpty()) {
-                        movieFilter.getListaMovies().addAll(TheMoviedbJsonUtils
-                                .getSimpleMovieStringsFromJson(jsonMoviesResponse));
-                    }
-                    Log.d(TAG,"Filmes recuperados: " + movieFilter.getListaMovies().size());
-                    return movieFilter.getListaMovies();
+                if (TipoFiltro.FAVORITES.equals(movieFilter.getTipoFiltro())) {
+                    movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getDbHelper()));
+                } else {
+                    movieFilter.setListaMovies(retrieveMoviesFromTheMovieService(movieFilter));
                 }
+                Log.d(TAG, "Filmes recuperados: " + movieFilter.getListaMovies().size());
+                return movieFilter.getListaMovies();
+
             } else throw new MovieServiceException("MovieFilter não pode ser nulo.");
         } catch (Exception e) {
             Log.e(TAG, " doInBackground ", e);
             e.printStackTrace();
             return null;
         }
+    }
 
-        return null;
+    private ArrayList<MovieModel> retrieveAllFavoriteMovies(MoviesDbHelper dbHelper) {
+        Log.d(TAG, "=== retrieveAllFavoriteMovies");
+        return MovieFromDataUtil.retrieveAllFavoriteMovies(dbHelper);
+    }
+
+
+    private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter) throws IOException, JSONException {
+        Log.d(TAG, "=== retrieveMoviesFromTheMovieService");
+
+        URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoFiltro(),
+                movieFilter.getSortOrder(), movieFilter.getCurrentPage());
+        String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
+
+        if (jsonMoviesResponse != null) {
+            if (null == movieFilter.getListaMovies() || movieFilter.getListaMovies().isEmpty()) {
+                movieFilter.setListaMovies(TheMoviedbJsonUtils.getSimpleMovieStringsFromJson(jsonMoviesResponse));
+            } else if (!movieFilter.getListaMovies().isEmpty()) {
+                movieFilter.getListaMovies().addAll(TheMoviedbJsonUtils
+                        .getSimpleMovieStringsFromJson(jsonMoviesResponse));
+            }
+
+        }
+        return movieFilter.getListaMovies();
     }
 
     @Override
     protected void onPostExecute(ArrayList<MovieModel> movies) {
-        //Neste ponto, no onPostExecute, chamamos o método `processFinish` do delegate para finalizar o processamento da requisição
-        //Aqui, conseguimos isolar responsabilidades! A classe de serviço agora é responsavel apenas por executar a requisição
-        //e avisar quando estiver pronta para ser processada.
+
         super.onPostExecute(movies);
         if (delegate != null)
             delegate.processFinish(movies);

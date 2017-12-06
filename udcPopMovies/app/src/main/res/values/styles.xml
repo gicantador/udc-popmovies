@@ -10,14 +10,21 @@
 
 
     <style name="Textos" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingEnd">10sp</item>
-        <item name="android:paddingStart">10sp</item>
-        <item name="android:fontFamily">casual</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="Labels" parent="Textos">
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Titulos" parent="Labels">
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorAccentLight</item>
+    </style>
+
+
 </resources>

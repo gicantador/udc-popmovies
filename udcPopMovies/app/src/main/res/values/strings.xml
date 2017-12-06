@@ -1,16 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">PopMovies</string>
+
+    <!-- strings com chave action_ sao utilizadas na implementacao, nao sao inuteis -->
     <string name="action_sort_popular" translatable="false">Top Popular</string>
     <string name="action_sort_rated" translatable="false">Top Rated</string>
     <string name="action_sort_desc" translatable="false">DESC</string>
     <string name="action_sort_asc" translatable="false">ASC</string>
 
+    <string name="action_name_popularity" translatable="false" tools:keep="@string/action_name_popularity">Top Popular</string>
+    <string name="action_name_vote_average" translatable="false" tools:keep="@string/action_name_vote_average">Top Rated</string>
+    <string name="action_name_.desc" translatable="false" tools:keep="@string/action_name__desc">DESC</string>
+    <string name="action_name_.asc" translatable="false" tools:keep="@string/action_name__asc">ASC</string>
+    <string name="action_name_favoritos" translatable="false" tools:keep="@string/action_name_favoritos">favoritos</string>
 
-    <string name="action_name_popularity" translatable="false">Top Popular</string>
-    <string name="action_name_vote_average" translatable="false">Top Rated</string>
-    <string name="action_name_.desc" translatable="false">DESC</string>
-    <string name="action_name_.asc" translatable="false">ASC</string>
-    <string name="title_activity_detail_movie" translatable="false">Movie</string>
+
     <string name="lb_rating">Rating: </string>
     <string name="lb_release">Release Date: </string>
     <string name="reload" translatable="false">Reload</string>
@@ -18,6 +21,19 @@
     <string name="erro_conexao">There is no internet connection. Do you want to try again?</string>
     <string name="label_filtro_usado">Showing films:</string>
     <string name="img_desc_movie_poster">Movie Poster</string>
+    <string name="desc_seta_play_trailer">Play trailer</string>
+    <string name="lb_titulo_trailers" translatable="false">Trailers</string>
+    <string name="tv_nao_ha_trailer"><![CDATA[< There\'s no trailer data >]]></string>
+    <string name="ac_detail_name" translatable="false">MovieDetail</string>
+    <string name="lb_titulo_reviews">Reviews</string>
+    <string name="text_aux_see_more">(click here to read more…)</string>
+    <string name="text_aux_author">Author:</string>
+    <string name="tv_nao_ha_review" translatable="true"><![CDATA[< There\'s no review data >]]></string>
+    <string name="txt_feeedback_star_add">The movie has been added to your favorites!</string>
+    <string name="txt_feeedback_star_rem">The movie has been removed from your favorites!</string>
+    <string name="action_favoritos">Favorites</string>
+    <string name="txt_feeedback_erro">Sorry, couldn\'t complete the action.</string>
+    <string name="img_des_star">Star as a favorite movie</string>
 
 
 </resources>
