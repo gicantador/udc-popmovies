@@ -19,7 +19,7 @@ public enum SortOrder {
 
     private String value;
 
-    private SortOrder(String value) {
+    SortOrder(String value) {
         this.value = value;
     }
 

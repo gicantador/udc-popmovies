@@ -297,7 +297,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     public void processFinish(Object output) {
         Log.d(TAG, "processFinish");
 
-        MovieDetailBox movieDetailBox = null;
+        MovieDetailBox movieDetailBox;
         try {
             movieDetailBox = (MovieDetailBox) output;
         } catch (Exception e) {

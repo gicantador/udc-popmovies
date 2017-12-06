@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 
 public class MovieDetailBox {
-    private ArrayList<TrailerModel> movieTrailersList;
-    private ArrayList<ReviewModel> movieReviewList;
-    private TipoListaRetorno tipoListaRetorno;
+    private final ArrayList<TrailerModel> movieTrailersList;
+    private final ArrayList<ReviewModel> movieReviewList;
+    private final TipoListaRetorno tipoListaRetorno;
 
     public MovieDetailBox(ArrayList<TrailerModel> movieTrailersList, ArrayList<ReviewModel> movieReviewList, TipoListaRetorno tipoListaRetorno) {
         this.movieTrailersList = movieTrailersList;

@@ -7,5 +7,5 @@ package com.pgcn.udcpopmovies.enums;
 public enum TipoListaRetorno {
 
     TRAILERS,
-    REVIEWS;
+    REVIEWS
 }

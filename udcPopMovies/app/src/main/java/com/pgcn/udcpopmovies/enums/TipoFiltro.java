@@ -21,7 +21,7 @@ public enum TipoFiltro {
 
     private String value;
 
-    private TipoFiltro(String value) {
+    TipoFiltro(String value) {
         this.value = value;
     }
 
