@@ -19,8 +19,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
 import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.enums.SortOrder;
+import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
@@ -44,15 +45,16 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private TextView mFilterTextView;
 
     // inicia com filmes populares desc
-    private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
-    private String mTipoSort = NetworkUtils.SORT_DESC;
+    // private String mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
+    private TipoFiltro mTipoFiltro = TipoFiltro.POPULAR;
+    private SortOrder mSortOrder = SortOrder.DESC;
 
     private int mCurrentPage = 0;
     private final boolean mRecarregaLista = true;
 
     private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
     private static final String KEY_SORT_FILTRO = "KEY_SORT_FILTRO";
-    private static final String KEY_MOVIELIST = "KEY_MOVIELIST";
+
     private MoviesDbHelper mDbHelper;
 
     @Override
@@ -78,8 +80,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         mRecyView.setAdapter(mMoviestAdapter);
         montaGrid();
         montaTextoAlerta();
-
-
     }
 
     /**
@@ -94,27 +94,22 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
             if (savedInstanceState.containsKey(KEY_TIPO_FILTRO)) {
                 String tipo = savedInstanceState.getString(KEY_TIPO_FILTRO);
                 if (null == tipo || TextUtils.isEmpty(tipo)) {
-                    mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
+                    mTipoFiltro = TipoFiltro.POPULAR;
                 } else {
-                    mTipoLista = tipo;
+                    mTipoFiltro = TipoFiltro.getByName(tipo);
                 }
             }
             if (savedInstanceState.containsKey(KEY_SORT_FILTRO)) {
                 String tipo = savedInstanceState.getString(KEY_SORT_FILTRO);
                 if (null == tipo || TextUtils.isEmpty(tipo)) {
-                    mTipoSort = NetworkUtils.SORT_DESC;
+                    mSortOrder = SortOrder.DESC;
                 } else {
-                    mTipoSort = tipo;
+                    mSortOrder = SortOrder.getByName(tipo);
                 }
             }
-            if (mTipoLista.equals(FavoriteMoviesDatabaseUtil.KEY_FAVORITOS)) {
+            if (mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
                 mDbHelper = new MoviesDbHelper(this);
             }
-
-         /*   if (savedInstanceState.containsKey(KEY_MOVIELIST)) {
-                mMovieModelArrayList = savedInstanceState.getParcelableArrayList(KEY_MOVIELIST);
-                mRecarregaLista = !(null != mMovieModelArrayList && !mMovieModelArrayList.isEmpty());
-            }*/
         }
     }
 
@@ -128,8 +123,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         mRecyView.setLayoutManager(gridLayoutManager);
         mRecyView.setHasFixedSize(false);
         mRecyView.setAdapter(mMoviestAdapter);
-
-
     }
 
 
@@ -143,12 +136,12 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 mCurrentPage++;
             }
 
-            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoSort, mTipoLista, mCurrentPage, mMovieModelArrayList, mDbHelper));
+            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoFiltro, mSortOrder,
+                    mCurrentPage, mMovieModelArrayList, mDbHelper));
 
         } else {
             mostrarFeedback(getString(R.string.erro_conexao));
         }
-        //  montaGrid();
     }
 
 
@@ -203,9 +196,8 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_TIPO_FILTRO, mTipoLista);
-        outState.putString(KEY_SORT_FILTRO, mTipoSort);
-        //  outState.putParcelableArrayList(KEY_MOVIELIST, mMovieModelArrayList);
+        outState.putString(KEY_TIPO_FILTRO, mTipoFiltro.getValue());
+        outState.putString(KEY_SORT_FILTRO, mSortOrder.getValue());
     }
 
 
@@ -225,25 +217,25 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
         switch (id) {
             case R.id.action_sort_popular:
-                mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
+                mTipoFiltro = TipoFiltro.POPULAR;
                 break;
             case R.id.action_sort_rated:
-                mTipoLista = NetworkUtils.SORT_VOTE_PARAM;
+                mTipoFiltro = TipoFiltro.TOP_RATED;
                 break;
             case R.id.action_sort_asc:
-                mTipoSort = NetworkUtils.SORT_ASC;
+                mSortOrder = SortOrder.ASC;
                 break;
             case R.id.action_sort_desc:
-                mTipoSort = NetworkUtils.SORT_DESC;
+                mSortOrder = SortOrder.DESC;
                 break;
             case R.id.action_favoritos:
-                mTipoLista = FavoriteMoviesDatabaseUtil.KEY_FAVORITOS;
+                mTipoFiltro = TipoFiltro.FAVORITES;
                 mDbHelper = new MoviesDbHelper(this);
                 break;
 
             default:
-                mTipoLista = NetworkUtils.SORT_POPULAR_PARAM;
-                mTipoSort = NetworkUtils.SORT_ASC;
+                mTipoFiltro = TipoFiltro.POPULAR;
+                mSortOrder = SortOrder.ASC;
 
         }
 
@@ -263,10 +255,10 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         Log.d(TAG, "montaTextoAlerta");
 
         final String nm = "action_name_";
-        int resId1Lista = getResources().getIdentifier(nm + mTipoLista, "string", this.getPackageName());
+        int resId1Lista = getResources().getIdentifier(nm + mTipoFiltro.getValue(), "string", this.getPackageName());
         String txtLista = getString(resId1Lista);
 
-        int resId1Sort = getResources().getIdentifier(nm + mTipoSort, "string", this.getPackageName());
+        int resId1Sort = getResources().getIdentifier(nm + mSortOrder.getValue(), "string", this.getPackageName());
         String txtSort = getString(resId1Sort);
 
         String txt = getString(R.string.label_filtro_usado) + StringUtils.SPACE + txtLista + StringUtils.SPACE + txtSort;
@@ -300,8 +292,8 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume mTipoLista" + mTipoLista);
-        if (mTipoLista.equals(FavoriteMoviesDatabaseUtil.KEY_FAVORITOS)) {
+        Log.d(TAG, "onResume mTipoLista" + mTipoFiltro.getValue());
+        if (mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
             invalidateData();
         }
         super.onResume();

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
+import com.pgcn.udcpopmovies.model.MovieDetailBox;
 import com.pgcn.udcpopmovies.model.ReviewModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  * Created by Giselle on 30/11/2017.
  */
 
-public class ReviewService extends AsyncTask<Object, String, ArrayList<ReviewModel>> {
+public class ReviewService extends AsyncTask<Object, String, MovieDetailBox> {
     private static final String TAG = ReviewService.class.getSimpleName();
     private AsyncTaskDelegate delegate = null;
 
@@ -32,7 +34,7 @@ public class ReviewService extends AsyncTask<Object, String, ArrayList<ReviewMod
 
 
     @Override
-    protected ArrayList<ReviewModel> doInBackground(Object... objects) {
+    protected MovieDetailBox doInBackground(Object... objects) {
         Log.d(TAG, "=== Inicio Async ReviewService - doInBackground");
         try {
             int movieId = (int) objects[0];
@@ -46,25 +48,25 @@ public class ReviewService extends AsyncTask<Object, String, ArrayList<ReviewMod
                     if (null != listaReviews) {
                         Log.d(TAG, "Reviews recuperados: " + listaReviews.size());
                     }
-                    return listaReviews;
+                    return new MovieDetailBox(null, listaReviews, TipoListaRetorno.REVIEWS);
                 }
             }
 
         } catch (Exception e) {
             Log.e(TAG, " doInBackground ", e);
             e.printStackTrace();
-            return null;
+            return new MovieDetailBox(null, null, TipoListaRetorno.REVIEWS);
         }
 
-        return null;
+        return new MovieDetailBox(null, null, TipoListaRetorno.REVIEWS);
     }
 
     @Override
-    protected void onPostExecute(ArrayList<ReviewModel> lreview) {
+    protected void onPostExecute(MovieDetailBox detailBox) {
 
-        super.onPostExecute(lreview);
+        super.onPostExecute(detailBox);
         if (delegate != null)
-            delegate.processFinish(lreview);
+            delegate.processFinish(detailBox);
     }
 
     @Override

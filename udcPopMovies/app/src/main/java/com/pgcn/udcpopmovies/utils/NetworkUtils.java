@@ -5,6 +5,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
+import com.pgcn.udcpopmovies.enums.SortOrder;
+import com.pgcn.udcpopmovies.enums.TipoFiltro;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -49,10 +52,10 @@ public class NetworkUtils {
      * @param pageToGet the number of the page to be request
      * @return
      */
-    public static URL buildMoviesUrl(String tipoLista, String tipoSort, int pageToGet) {
+    public static URL buildMoviesUrl(TipoFiltro tipoLista, SortOrder tipoSort, int pageToGet) {
 
         Uri builtUri = Uri.parse(API_ROOT).buildUpon()
-                .appendQueryParameter(SORT_BY, tipoLista + tipoSort)
+                .appendQueryParameter(SORT_BY, tipoLista.getValue() + tipoSort.getValue())
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 .build();

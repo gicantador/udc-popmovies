@@ -9,7 +9,7 @@
     <string name="desc_seta_play_trailer">Ver trailer</string>
     <string name="tv_nao_ha_trailer"><![CDATA[< Não há trailers para esse filme >]]></string>
     <string name="lb_titulo_reviews">Avaliações</string>
-    <string name="text_aux_see_more">(click para ver mais…)</string>
+    <string name="text_aux_see_more">(clique para ler mais…)</string>
     <string name="text_aux_author">Autor:</string>
     <string name="tv_nao_ha_review"><![CDATA[< Não há reviews >]]></string>
     <string name="txt_feeedback_star_add">O filme foi adicionado aos seus favoritos!</string>

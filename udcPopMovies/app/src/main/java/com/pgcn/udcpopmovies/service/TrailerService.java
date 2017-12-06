@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
+import com.pgcn.udcpopmovies.model.MovieDetailBox;
 import com.pgcn.udcpopmovies.model.TrailerModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  * Created by Giselle on 29/11/2017.
  */
 
-public class TrailerService extends AsyncTask<Object, String, ArrayList<TrailerModel>> {
+public class TrailerService extends AsyncTask<Object, String, MovieDetailBox> {
 
     private static final String TAG = TrailerService.class.getSimpleName();
     private AsyncTaskDelegate delegate = null;
@@ -33,7 +35,7 @@ public class TrailerService extends AsyncTask<Object, String, ArrayList<TrailerM
     }
 
     @Override
-    protected ArrayList<TrailerModel> doInBackground(Object... objects) {
+    protected MovieDetailBox doInBackground(Object... objects) {
         Log.d(TAG, "=== Inicio Async TrailerService - doInBackground");
 
         try {
@@ -48,26 +50,26 @@ public class TrailerService extends AsyncTask<Object, String, ArrayList<TrailerM
                     if (null != listaTrailers) {
                         Log.d(TAG, "Trailers recuperados: " + listaTrailers.size());
                     }
-                    return listaTrailers;
+                    return new MovieDetailBox(listaTrailers, null, TipoListaRetorno.TRAILERS);
                 }
             }
 
         } catch (Exception e) {
             Log.e(TAG, " doInBackground ", e);
             e.printStackTrace();
-            return null;
+            return new MovieDetailBox(null, null, TipoListaRetorno.TRAILERS);
         }
 
-        return null;
+        return new MovieDetailBox(null, null, TipoListaRetorno.TRAILERS);
     }
 
 
     @Override
-    protected void onPostExecute(ArrayList<TrailerModel> trailers) {
+    protected void onPostExecute(MovieDetailBox detailBox) {
 
-        super.onPostExecute(trailers);
+        super.onPostExecute(detailBox);
         if (delegate != null)
-            delegate.processFinish(trailers);
+            delegate.processFinish(detailBox);
     }
 
     @Override

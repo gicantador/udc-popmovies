@@ -25,7 +25,7 @@
     <string name="tv_nao_ha_trailer"><![CDATA[< There\'s no trailer data >]]></string>
     <string name="ac_detail_name" translatable="false">MovieDetail</string>
     <string name="lb_titulo_reviews">Reviews</string>
-    <string name="text_aux_see_more">(click to see more…)</string>
+    <string name="text_aux_see_more">(click here to read more…)</string>
     <string name="text_aux_author">Author:</string>
     <string name="tv_nao_ha_review" translatable="true"><![CDATA[< There\'s no review data >]]></string>
     <string name="txt_feeedback_star_add">The movie has been added to your favorites!</string>

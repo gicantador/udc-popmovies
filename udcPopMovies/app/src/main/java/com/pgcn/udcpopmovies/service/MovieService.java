@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
 import com.pgcn.udcpopmovies.data.MovieFromDataUtil;
 import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
@@ -52,7 +52,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             MovieFilter movieFilter = (MovieFilter) objects[0];
             if (null != movieFilter) {
 
-                if (FavoriteMoviesDatabaseUtil.KEY_FAVORITOS.equals(movieFilter.getTipoLista())) {
+                if (TipoFiltro.FAVORITES.equals(movieFilter.getTipoFiltro())) {
                     movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getDbHelper()));
                 } else {
                     movieFilter.setListaMovies(retrieveMoviesFromTheMovieService(movieFilter));
@@ -77,8 +77,8 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
     private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter) throws IOException, JSONException {
         Log.d(TAG, "=== retrieveMoviesFromTheMovieService");
 
-        URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoLista(),
-                movieFilter.getTipoSort(), movieFilter.getCurrentPage());
+        URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoFiltro(),
+                movieFilter.getSortOrder(), movieFilter.getCurrentPage());
         String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
         if (jsonMoviesResponse != null) {

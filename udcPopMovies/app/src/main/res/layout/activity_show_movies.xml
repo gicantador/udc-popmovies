@@ -34,7 +34,6 @@
             android:textColor="@color/colorWhite"
             android:textAlignment="viewStart"
             android:textColorHighlight="@color/colorAccentLight"
-
             android:textSize="15sp"
             android:visibility="invisible" />
 
@@ -49,6 +48,6 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_gravity="center"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

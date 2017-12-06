@@ -1,6 +1,8 @@
 package com.pgcn.udcpopmovies.model;
 
 import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.enums.SortOrder;
+import com.pgcn.udcpopmovies.enums.TipoFiltro;
 
 import java.util.ArrayList;
 
@@ -11,27 +13,27 @@ import java.util.ArrayList;
  */
 public class MovieFilter {
 
-    private final String tipoSort;
-    private final String tipoLista;
+    private final TipoFiltro tipoFiltro;
+    private final SortOrder sortOrder;
     private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
     private final MoviesDbHelper dbHelper;
 
-    public MovieFilter(String tipoSort, String tipoLista, int currentPage, ArrayList<MovieModel> listaMovies,
+    public MovieFilter(TipoFiltro filtro, SortOrder sort, int currentPage, ArrayList<MovieModel> listaMovies,
                        MoviesDbHelper moviesDbHelper) {
-        this.tipoSort = tipoSort;
-        this.tipoLista = tipoLista;
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
         this.dbHelper = moviesDbHelper;
+        tipoFiltro = filtro;
+        sortOrder = sort;
     }
 
-    public String getTipoSort() {
-        return tipoSort;
+    public TipoFiltro getTipoFiltro() {
+        return tipoFiltro;
     }
 
-    public String getTipoLista() {
-        return tipoLista;
+    public SortOrder getSortOrder() {
+        return sortOrder;
     }
 
     public int getCurrentPage() {
@@ -49,4 +51,6 @@ public class MovieFilter {
     public MoviesDbHelper getDbHelper() {
         return dbHelper;
     }
+
+
 }

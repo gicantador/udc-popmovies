@@ -23,7 +23,9 @@ import android.widget.Toast;
 
 import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
 import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
+import com.pgcn.udcpopmovies.model.MovieDetailBox;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.model.ReviewModel;
 import com.pgcn.udcpopmovies.model.TrailerModel;
@@ -186,30 +188,33 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             public void onClick(View v) {
                 boolean fav = mMovie.isFavorito();
                 mMovie.setFavorito(!fav);
-                salvarFilmeComoFavorito(mMovie.isFavorito());
-                mudaBotaoEstrela(mMovie.isFavorito());
-                mostrarFeedbackStar(mMovie.isFavorito());
+                try {
+                    salvarFilmeComoFavorito(mMovie.isFavorito());
+                    mudaBotaoEstrela(mMovie.isFavorito());
+                    mostrarFeedbackStar(mMovie.isFavorito());
+                } catch (MovieServiceException e) {
+                    Toast.makeText(mBtStar.getContext(), getString(R.string.txt_feeedback_erro), Toast.LENGTH_SHORT).show();
+                    mMovie.setFavorito(fav);
+                    e.printStackTrace();
+                }
 
             }
         });
     }
 
 
-    private void salvarFilmeComoFavorito(boolean fav) {
+    private void salvarFilmeComoFavorito(boolean fav) throws MovieServiceException {
 
         MoviesDbHelper dbHelper = new MoviesDbHelper(this);
         mDb = dbHelper.getWritableDatabase();
-        try {
-            if (fav) {
-                FavoriteMoviesDatabaseUtil.insertData(mDb, mMovie);
-            } else {
-                FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getDatabaseId());
-            }
-            mostrarFeedbackStar(fav);
-        } catch (MovieServiceException e) {
-            Toast.makeText(this, getString(R.string.txt_feeedback_erro), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+
+        if (fav) {
+            FavoriteMoviesDatabaseUtil.insertData(mDb, mMovie);
+        } else {
+            FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getId());
         }
+        mostrarFeedbackStar(fav);
+
     }
 
     private void mostrarFeedbackStar(boolean mFavorito) {
@@ -228,6 +233,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             new TrailerService(getApplicationContext(), this).execute(movieId);
         } else {
             mTrailersProgressBar.setVisibility(View.INVISIBLE);
+            mMsgErroTrailer.setVisibility(View.VISIBLE);
             mostrarFeedback();
         }
 
@@ -291,39 +297,41 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     public void processFinish(Object output) {
         Log.d(TAG, "processFinish");
 
-        ArrayList<Object> lista = (ArrayList<Object>) output;
-        if (null != lista && !lista.isEmpty()) {
-            Object ob = lista.get(0);
-            if (null != ob && ob.getClass().equals(TrailerModel.class)) {
-                mTrailerList = (ArrayList<TrailerModel>) output;
-                mTrailersProgressBar.setVisibility(View.INVISIBLE);
-                if (null != mTrailerList) {
-                    if (mTrailerList.isEmpty()) {
-                        mMsgErroTrailer.setVisibility(View.VISIBLE);
-
-                    } else {
-                        mTrailerAdapter = new TrailersAdapter(mTrailerList, this);
-                        mTrailerRecyView.setAdapter(mTrailerAdapter);
-                        montaGridTrailer();
-                    }
-                } else
-                    mMsgErroTrailer.setVisibility(View.VISIBLE);
-            } else if (null != ob && ob.getClass().equals(ReviewModel.class)) {
-                mReviewList = (ArrayList<ReviewModel>) output;
-                mReviewsProgressBar.setVisibility(View.INVISIBLE);
-                if (null != mReviewList) {
-                    if (mReviewList.isEmpty()) {
-                        mMsgErroReview.setVisibility(View.VISIBLE);
-                    }
-                    mReviewAdapter = new ReviewAdapter(mReviewList, this);
-                    mReviewRecyView.setAdapter(mReviewAdapter);
-                    montaGridReview();
-
-                } else
-                    mMsgErroReview.setVisibility(View.VISIBLE);
-            }
+        MovieDetailBox movieDetailBox = null;
+        try {
+            movieDetailBox = (MovieDetailBox) output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
+        if (null != movieDetailBox && TipoListaRetorno.TRAILERS.equals(movieDetailBox.getTipoListaRetorno())) {
+            mTrailerList = movieDetailBox.getMovieTrailersList();
+            mTrailersProgressBar.setVisibility(View.INVISIBLE);
+            if (null != mTrailerList) {
+                if (mTrailerList.isEmpty()) {
+                    mMsgErroTrailer.setVisibility(View.VISIBLE);
+                } else {
+                    mTrailerAdapter = new TrailersAdapter(mTrailerList, this);
+                    mTrailerRecyView.setAdapter(mTrailerAdapter);
+                    montaGridTrailer();
+                }
+            } else
+                mMsgErroTrailer.setVisibility(View.VISIBLE);
+        }
+        if (null != movieDetailBox && TipoListaRetorno.REVIEWS.equals(movieDetailBox.getTipoListaRetorno())) {
+            mReviewList = movieDetailBox.getMovieReviewList();
+            mReviewsProgressBar.setVisibility(View.INVISIBLE);
+            if (null != mReviewList) {
+                if (mReviewList.isEmpty()) {
+                    mMsgErroReview.setVisibility(View.VISIBLE);
+                }
+                mReviewAdapter = new ReviewAdapter(mReviewList, this);
+                mReviewRecyView.setAdapter(mReviewAdapter);
+                montaGridReview();
 
+            } else
+                mMsgErroReview.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -342,7 +350,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
 
     private RecyclerView montaGridGenerico(RecyclerView anyRecyView) {
         Log.d(TAG, "montaGridGenerico");
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
+                false);
         layoutManager.setSmoothScrollbarEnabled(true);
         anyRecyView.setLayoutManager(layoutManager);
         anyRecyView.setHasFixedSize(false);
@@ -361,7 +370,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private void mostrarFeedback() {
         Log.d(TAG, "mostrarFeedback");
         Snackbar snackbar = Snackbar
-                .make(coordinatorLayout, getString(R.string.erro_conexao), Snackbar.LENGTH_INDEFINITE);
+                .make(coordinatorLayout, getString(R.string.erro_conexao),
+                        Snackbar.LENGTH_INDEFINITE);
 
         // Changing message text color
         snackbar.setActionTextColor(Color.RED);

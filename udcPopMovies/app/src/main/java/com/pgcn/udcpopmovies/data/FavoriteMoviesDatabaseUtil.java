@@ -66,7 +66,7 @@ public class FavoriteMoviesDatabaseUtil {
         try {
             db.beginTransaction();
             int teste = db.delete(MoviesContract.FavoriteMovies.TABLE_NAME,
-                    MoviesContract.FavoriteMovies._ID + "=?",
+                    MoviesContract.FavoriteMovies.COLUMN_API_ID + "=?",
                     new String[]{Integer.toString(id)});
             if (teste <= 0) {
                 throw new MovieServiceException("ERRO AO REMOVER DADOS ");
