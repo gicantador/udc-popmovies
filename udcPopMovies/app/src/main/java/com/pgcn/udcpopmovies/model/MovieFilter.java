@@ -1,6 +1,7 @@
 package com.pgcn.udcpopmovies.model;
 
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
+import android.content.ContentResolver;
+
 import com.pgcn.udcpopmovies.enums.SortOrder;
 import com.pgcn.udcpopmovies.enums.TipoFiltro;
 
@@ -17,15 +18,15 @@ public class MovieFilter {
     private final SortOrder sortOrder;
     private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
-    private final MoviesDbHelper dbHelper;
+    private final ContentResolver mContentResolver;
 
     public MovieFilter(TipoFiltro filtro, SortOrder sort, int currentPage, ArrayList<MovieModel> listaMovies,
-                       MoviesDbHelper moviesDbHelper) {
+                       ContentResolver contentResolver) {
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
-        this.dbHelper = moviesDbHelper;
-        tipoFiltro = filtro;
-        sortOrder = sort;
+        this.mContentResolver = contentResolver;
+        this.tipoFiltro = filtro;
+        this.sortOrder = sort;
     }
 
     public TipoFiltro getTipoFiltro() {
@@ -48,8 +49,8 @@ public class MovieFilter {
         this.listaMovies = listaMovies;
     }
 
-    public MoviesDbHelper getDbHelper() {
-        return dbHelper;
+    public ContentResolver getContentResolver() {
+        return mContentResolver;
     }
 
 

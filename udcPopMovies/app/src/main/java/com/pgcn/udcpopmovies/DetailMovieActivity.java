@@ -3,7 +3,6 @@ package com.pgcn.udcpopmovies;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
 import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieDetailBox;
@@ -72,7 +70,6 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private boolean mRecarregaListaTrailer = true;
     private boolean mFavorito = false;
     private MovieModel mMovie;
-    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,12 +129,23 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         montaGridReview();
     }
 
-    private void verificaSeFavorito(Integer id) {
+    /**
+     * Verifica se o filme está salvo na base como favorito, para setar corretamente a ID e a
+     * estrela
+     *
+     * @param apiId
+     */
+    private void verificaSeFavorito(Integer apiId) {
         if (!mMovie.isFavorito()) {
-            MoviesDbHelper dbHelper = new MoviesDbHelper(this);
-            mDb = dbHelper.getReadableDatabase();
-            if (FavoriteMoviesDatabaseUtil.buscaFavorito(mDb, id)) {
+            Integer dbId = FavoriteMoviesDatabaseUtil.buscaFavorito(apiId, getContentResolver());
+            if (null != dbId) {
                 mMovie.setFavorito(true);
+                mMovie.setDatabaseId(dbId);
+                mFavorito = true;
+            } else {
+                mMovie.setFavorito(false);
+                mMovie.setDatabaseId(0);
+                mFavorito = false;
             }
         }
     }
@@ -189,7 +197,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
                 boolean fav = mMovie.isFavorito();
                 mMovie.setFavorito(!fav);
                 try {
-                    salvarFilmeComoFavorito(mMovie.isFavorito());
+                    salvarFilmeFavorito(mMovie.isFavorito());
                     mudaBotaoEstrela(mMovie.isFavorito());
                     mostrarFeedbackStar(mMovie.isFavorito());
                 } catch (MovieServiceException e) {
@@ -203,15 +211,14 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     }
 
 
-    private void salvarFilmeComoFavorito(boolean fav) throws MovieServiceException {
-
-        MoviesDbHelper dbHelper = new MoviesDbHelper(this);
-        mDb = dbHelper.getWritableDatabase();
-
+    private void salvarFilmeFavorito(boolean fav) throws MovieServiceException {
         if (fav) {
-            FavoriteMoviesDatabaseUtil.insertData(mDb, mMovie);
+            mMovie.setDatabaseId(FavoriteMoviesDatabaseUtil.insertData(mMovie, getContentResolver()));
+            mFavorito = true;
         } else {
-            FavoriteMoviesDatabaseUtil.removeData(mDb, mMovie.getId());
+            FavoriteMoviesDatabaseUtil.removeData(mMovie.getDatabaseId(), getContentResolver());
+            mMovie.setFavorito(false);
+            mFavorito = false;
         }
         mostrarFeedbackStar(fav);
 

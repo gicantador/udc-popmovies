@@ -64,7 +64,7 @@ public class MovieModel implements Parcelable {
 
     // marcado como favorito? por padrao eh false
     private Boolean favorito = false;
-    private int databaseId;
+    private int databaseId = 0;
     /**
      * Construtor com principais atributos
      *

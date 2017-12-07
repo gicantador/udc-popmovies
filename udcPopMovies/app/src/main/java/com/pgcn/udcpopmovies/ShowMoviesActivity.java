@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
 import com.pgcn.udcpopmovies.enums.SortOrder;
 import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.model.MovieFilter;
@@ -54,8 +53,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
     private static final String KEY_SORT_FILTRO = "KEY_SORT_FILTRO";
-
-    private MoviesDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +104,9 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                     mSortOrder = SortOrder.getByName(tipo);
                 }
             }
-            if (mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
-                mDbHelper = new MoviesDbHelper(this);
-            }
+//            if (mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
+//                mDbHelper = new MoviesDbHelper(this);
+//            }
         }
     }
 
@@ -137,7 +134,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
             }
 
             new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoFiltro, mSortOrder,
-                    mCurrentPage, mMovieModelArrayList, mDbHelper));
+                    mCurrentPage, mMovieModelArrayList, getContentResolver()));
 
         } else {
             mostrarFeedback(getString(R.string.erro_conexao));
@@ -230,7 +227,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 break;
             case R.id.action_favoritos:
                 mTipoFiltro = TipoFiltro.FAVORITES;
-                mDbHelper = new MoviesDbHelper(this);
+                //       mDbHelper = new MoviesDbHelper(this);
                 break;
 
             default:

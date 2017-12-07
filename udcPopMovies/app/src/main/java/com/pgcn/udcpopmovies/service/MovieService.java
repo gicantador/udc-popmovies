@@ -1,11 +1,11 @@
 package com.pgcn.udcpopmovies.service;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.data.MovieFromDataUtil;
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
 import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieFilter;
@@ -53,7 +53,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             if (null != movieFilter) {
 
                 if (TipoFiltro.FAVORITES.equals(movieFilter.getTipoFiltro())) {
-                    movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getDbHelper()));
+                    movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getContentResolver()));
                 } else {
                     movieFilter.setListaMovies(retrieveMoviesFromTheMovieService(movieFilter));
                 }
@@ -68,9 +68,10 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
         }
     }
 
-    private ArrayList<MovieModel> retrieveAllFavoriteMovies(MoviesDbHelper dbHelper) {
+    private ArrayList<MovieModel> retrieveAllFavoriteMovies(ContentResolver contentResolver) {
         Log.d(TAG, "=== retrieveAllFavoriteMovies");
-        return MovieFromDataUtil.retrieveAllFavoriteMovies(dbHelper);
+        return MovieFromDataUtil.retrieveAllFavoriteMovies(contentResolver);
+
     }
 
 

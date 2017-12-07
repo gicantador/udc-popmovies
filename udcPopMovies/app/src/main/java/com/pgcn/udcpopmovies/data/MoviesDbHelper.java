@@ -9,11 +9,11 @@ import android.util.Log;
  * Created by Giselle on 02/12/2017.
  */
 
-public class MoviesDbHelper extends SQLiteOpenHelper {
+class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = MoviesDbHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "popmovies.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public MoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -22,15 +22,15 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "onCreate ");
-        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MoviesContract.FavoriteMovies.TABLE_NAME + " (" +
-                MoviesContract.FavoriteMovies._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                MoviesContract.FavoriteMovies.COLUMN_API_ID + " INTEGER UNIQUE NOT NULL," +
-                MoviesContract.FavoriteMovies.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL," +
-                MoviesContract.FavoriteMovies.COLUMN_POSTER_PATH + " TEXT ," +
-                MoviesContract.FavoriteMovies.COLUMN_OVERVIEW + " TEXT," +
-                MoviesContract.FavoriteMovies.COLUMN_RELEASE_DATE + " TEXT," +
-                MoviesContract.FavoriteMovies.COLUMN_VOTE_AVERAGE + " TEXT," +
-                MoviesContract.FavoriteMovies.COLUMN_DTA_CRIACAO + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MoviesContentContract.MoviesEntry.TABLE_NAME + " (" +
+                MoviesContentContract.MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MoviesContentContract.MoviesEntry.COLUMN_API_ID + " INTEGER UNIQUE NOT NULL," +
+                MoviesContentContract.MoviesEntry.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL," +
+                MoviesContentContract.MoviesEntry.COLUMN_POSTER_PATH + " TEXT ," +
+                MoviesContentContract.MoviesEntry.COLUMN_OVERVIEW + " TEXT," +
+                MoviesContentContract.MoviesEntry.COLUMN_RELEASE_DATE + " TEXT," +
+                MoviesContentContract.MoviesEntry.COLUMN_VOTE_AVERAGE + " TEXT," +
+                MoviesContentContract.MoviesEntry.COLUMN_DTA_CRIACAO + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";
         Log.d(TAG, "query -- " + SQL_CREATE_MOVIE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
@@ -39,7 +39,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade ");
-        db.execSQL("DROP TABLE IF EXISTS " + MoviesContract.FavoriteMovies.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MoviesContentContract.MoviesEntry.TABLE_NAME);
         onCreate(db);
     }
 }
