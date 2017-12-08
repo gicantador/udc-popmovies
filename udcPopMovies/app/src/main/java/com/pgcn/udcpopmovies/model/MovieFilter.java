@@ -2,7 +2,6 @@ package com.pgcn.udcpopmovies.model;
 
 import android.content.ContentResolver;
 
-import com.pgcn.udcpopmovies.enums.SortOrder;
 import com.pgcn.udcpopmovies.enums.TipoFiltro;
 
 import java.util.ArrayList;
@@ -15,27 +14,22 @@ import java.util.ArrayList;
 public class MovieFilter {
 
     private final TipoFiltro tipoFiltro;
-    private final SortOrder sortOrder;
     private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
     private final ContentResolver mContentResolver;
 
-    public MovieFilter(TipoFiltro filtro, SortOrder sort, int currentPage, ArrayList<MovieModel> listaMovies,
+    public MovieFilter(TipoFiltro filtro, int currentPage, ArrayList<MovieModel> listaMovies,
                        ContentResolver contentResolver) {
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
         this.mContentResolver = contentResolver;
         this.tipoFiltro = filtro;
-        this.sortOrder = sort;
     }
 
     public TipoFiltro getTipoFiltro() {
         return tipoFiltro;
     }
 
-    public SortOrder getSortOrder() {
-        return sortOrder;
-    }
 
     public int getCurrentPage() {
         return currentPage;

@@ -5,7 +5,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import com.pgcn.udcpopmovies.enums.SortOrder;
 import com.pgcn.udcpopmovies.enums.TipoFiltro;
 
 import java.io.IOException;
@@ -26,20 +25,16 @@ public class NetworkUtils {
     private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w342";
 
     // connection configuration
-    private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
     private final static String API_MOVIE_ROOT = "https://api.themoviedb.org/3/movie";
     private final static String KEY_PARAM = "api_key";
-    private final static String SORT_BY = "sort_by";
     private final static String PAGE = "page";
     private final static String VIDEOS = "videos";
     private final static String REVIEWS = "reviews";
     private final static int timeout = 20000; // 20 sec
 
     // filter configuration
-    public static final String SORT_POPULAR_PARAM = "popularity";
-    public static final String SORT_VOTE_PARAM = "vote_average";
-    public static final String SORT_ASC = ".asc";
-    public static final String SORT_DESC = ".desc";
+    public static final String SORT_POPULAR_PARAM = "popular";
+    public static final String SORT_VOTE_PARAM = "top_rated";
 
     private static final String API_KEY = APIConfigurationConstants.API_KEY;
     private static final String DELIMITER_PATTERN = "\\A";
@@ -48,14 +43,13 @@ public class NetworkUtils {
      * Buld conection URL
      *
      * @param tipoLista popular or top rated
-     * @param tipoSort  asc or desc
      * @param pageToGet the number of the page to be request
      * @return
      */
-    public static URL buildMoviesUrl(TipoFiltro tipoLista, SortOrder tipoSort, int pageToGet) {
+    public static URL buildMoviesUrl(TipoFiltro tipoLista, int pageToGet) {
 
-        Uri builtUri = Uri.parse(API_ROOT).buildUpon()
-                .appendQueryParameter(SORT_BY, tipoLista.getValue() + tipoSort.getValue())
+        Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
+                .appendPath(tipoLista.getValue())
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 .build();

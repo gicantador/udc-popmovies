@@ -75,11 +75,12 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
     }
 
 
-    private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter) throws IOException, JSONException {
+    private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter)
+            throws IOException, JSONException {
         Log.d(TAG, "=== retrieveMoviesFromTheMovieService");
 
         URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoFiltro(),
-                movieFilter.getSortOrder(), movieFilter.getCurrentPage());
+                movieFilter.getCurrentPage());
         String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
         if (jsonMoviesResponse != null) {
