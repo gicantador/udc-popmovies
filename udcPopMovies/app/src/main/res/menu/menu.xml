@@ -14,7 +14,7 @@
 
     <item
         android:id="@+id/action_favoritos"
-        android:orderInCategory="5"
+        android:orderInCategory="3"
         android:title="@string/action_favoritos"
         app:showAsAction="collapseActionView"/>
 </menu>
