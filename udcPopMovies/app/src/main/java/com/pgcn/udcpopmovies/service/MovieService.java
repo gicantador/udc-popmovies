@@ -89,6 +89,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             } else if (!movieFilter.getListaMovies().isEmpty()) {
                 movieFilter.getListaMovies().addAll(TheMoviedbJsonUtils
                         .getSimpleMovieStringsFromJson(jsonMoviesResponse));
+
             }
 
         }

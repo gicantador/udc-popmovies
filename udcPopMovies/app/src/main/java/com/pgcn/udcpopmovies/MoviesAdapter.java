@@ -32,7 +32,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(MovieModel movie);
+        void onClick(MovieModel movie, int adapterPosition);
     }
 
 
@@ -59,7 +59,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
             String imagePath = movie.getRootPosterPath();
             if (imagePath != null && !imagePath.isEmpty()) {
                 Picasso.with(holder.moviePoster.getContext()).load(imagePath).placeholder(R.drawable.placeholder_empty).into(holder.moviePoster);
-                Log.d(TAG, "Imagem: " + imagePath);
             }
         }
     }
@@ -98,11 +97,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         @Override
         public void onClick(View v) {
+            Log.d(TAG, " onClick(View v)");
             int adapterPosition = getAdapterPosition();
             MovieModel movieSelected = mMovieList.get(adapterPosition);
             if (movieSelected != null) {
                 Log.d(TAG, "Filme selecionado : posicao[" + adapterPosition + "] title[" + movieSelected.getTitle() + "]");
-                mClickHandler.onClick(movieSelected);
+                mClickHandler.onClick(movieSelected, adapterPosition);
             }
         }
     }

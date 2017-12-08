@@ -2,7 +2,7 @@
 <resources>
     <string name="lb_rating">Classificação:</string>
     <string name="lb_release">Data de estréia:</string>
-    <string name="erro_conexao">Não há conexão com a internet. Deseja tentar novamente?</string>
+    <string name="erro_conexao">Não há conexão com a internet. Deseja carregar os filmes favoritos?</string>
     <string name="label_filtro_usado">Exibindo filmes:</string>
     <string name="txt_empty_data"><![CDATA[< dado não fornecido >]]></string>
     <string name="img_desc_movie_poster">Poster do Filme</string>

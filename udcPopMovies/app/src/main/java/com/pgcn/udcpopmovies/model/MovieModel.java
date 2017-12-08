@@ -163,6 +163,10 @@ public class MovieModel implements Parcelable {
         }
     };
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     /**
      * Retorna a url da imagem do poster já completa
      *

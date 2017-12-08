@@ -49,6 +49,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private static final String KEY_LISTA_TRAILER = "KEY_LISTA_TRAILER";
     private static final String KEY_LISTA_REVIEW = "KEY_LISTA_REVIEW";
     private static final String KEY_FAVORITO = "KEY_FAVORITO";
+    private static final String KEY_MOVIE = "KEY_MOVIE";
 
     private ProgressBar mTrailersProgressBar;
     private ProgressBar mReviewsProgressBar;
@@ -166,6 +167,10 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             if (savedInstanceState.containsKey(KEY_FAVORITO)) {
                 mFavorito = savedInstanceState.getBoolean(KEY_FAVORITO);
                 mudaBotaoEstrela(mFavorito);
+            }
+
+            if (savedInstanceState.containsKey(KEY_MOVIE)) {
+                mMovie = savedInstanceState.getParcelable(KEY_FAVORITO);
             }
         }
     }
@@ -425,6 +430,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_LISTA_TRAILER, mTrailerList);
         outState.putParcelableArrayList(KEY_LISTA_REVIEW, mReviewList);
+        outState.putParcelable(KEY_MOVIE, mMovie);
         outState.putBoolean(KEY_FAVORITO, mFavorito);
     }
 

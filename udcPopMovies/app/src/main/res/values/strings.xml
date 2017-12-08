@@ -14,7 +14,7 @@
     <string name="lb_release">Release Date: </string>
     <string name="reload" translatable="false">Reload</string>
     <string name="txt_empty_data"><![CDATA[< data not provided >]]></string>
-    <string name="erro_conexao">There is no internet connection. Do you want to try again?</string>
+    <string name="erro_conexao">There is no internet connection. Do you want to load favorite movies?</string>
     <string name="label_filtro_usado">Showing films:</string>
     <string name="img_desc_movie_poster">Movie Poster</string>
     <string name="desc_seta_play_trailer">Play trailer</string>
