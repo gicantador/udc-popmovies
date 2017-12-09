@@ -12,12 +12,12 @@
 
         <ImageView
             android:id="@+id/img_play_trailer"
-            android:layout_width="30sp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:adjustViewBounds="true"
             android:contentDescription="@string/desc_seta_play_trailer"
-            android:padding="3sp" />
+            android:padding="3dp" />
 
         <TextView
             android:id="@+id/tv_trailers_item_title"

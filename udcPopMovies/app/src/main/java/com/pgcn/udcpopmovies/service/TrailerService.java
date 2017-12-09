@@ -1,14 +1,13 @@
 package com.pgcn.udcpopmovies.service;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
 import com.pgcn.udcpopmovies.model.MovieDetailBox;
 import com.pgcn.udcpopmovies.model.TrailerModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,10 +26,9 @@ public class TrailerService extends AsyncTask<Object, String, MovieDetailBox> {
      * No construtor da classe, passamos uma classe responsável por "responder" a requisição após a
      * sua execução Esse responsável é o AsyncTaskDelegate
      *
-     * @param context
      * @param responder
      */
-    public TrailerService(Context context, AsyncTaskDelegate responder) {
+    public TrailerService(AsyncTaskDelegate responder) {
         this.delegate = responder;
     }
 
@@ -41,7 +39,7 @@ public class TrailerService extends AsyncTask<Object, String, MovieDetailBox> {
         try {
             int movieId = (int) objects[0];
             if (0 != movieId) {
-                URL trailerRequestUrl = NetworkUtils.buildTrailersUrl(movieId);
+                URL trailerRequestUrl = NetworkUtils.buildListasUrl(movieId, TiposDefinidos.TRAILERS);
                 String jsonTrailersResponse = NetworkUtils.getResponseFromHttpUrl(trailerRequestUrl);
 
                 if (jsonTrailersResponse != null) {
@@ -50,17 +48,17 @@ public class TrailerService extends AsyncTask<Object, String, MovieDetailBox> {
                     if (null != listaTrailers) {
                         Log.d(TAG, "Trailers recuperados: " + listaTrailers.size());
                     }
-                    return new MovieDetailBox(listaTrailers, null, TipoListaRetorno.TRAILERS);
+                    return new MovieDetailBox(listaTrailers, null, TiposDefinidos.TRAILERS);
                 }
             }
 
         } catch (Exception e) {
             Log.e(TAG, " doInBackground ", e);
             e.printStackTrace();
-            return new MovieDetailBox(null, null, TipoListaRetorno.TRAILERS);
+            return new MovieDetailBox(null, null, TiposDefinidos.TRAILERS);
         }
 
-        return new MovieDetailBox(null, null, TipoListaRetorno.TRAILERS);
+        return new MovieDetailBox(null, null, TiposDefinidos.TRAILERS);
     }
 
 

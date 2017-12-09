@@ -1,8 +1,11 @@
 package com.pgcn.udcpopmovies.model;
 
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
-import com.pgcn.udcpopmovies.enums.SortOrder;
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
+import android.content.ContentResolver;
+import android.util.Log;
+
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 
@@ -13,28 +16,28 @@ import java.util.ArrayList;
  */
 public class MovieFilter {
 
-    private final TipoFiltro tipoFiltro;
-    private final SortOrder sortOrder;
+    private static final String TAG = MovieFilter.class.getSimpleName();
+
     private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
-    private final MoviesDbHelper dbHelper;
+    private final ContentResolver mContentResolver;
 
-    public MovieFilter(TipoFiltro filtro, SortOrder sort, int currentPage, ArrayList<MovieModel> listaMovies,
-                       MoviesDbHelper moviesDbHelper) {
+    @TiposDefinidos.Tipos
+    private final int tipoFiltro;
+
+    public MovieFilter(int filtro, int currentPage, ArrayList<MovieModel> listaMovies,
+                       ContentResolver contentResolver) {
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
-        this.dbHelper = moviesDbHelper;
-        tipoFiltro = filtro;
-        sortOrder = sort;
+        this.mContentResolver = contentResolver;
+        this.tipoFiltro = filtro;
+        Log.d(TAG, "MovieFilter [" + toString() + " ]");
     }
 
-    public TipoFiltro getTipoFiltro() {
+    public int getTipoFiltro() {
         return tipoFiltro;
     }
 
-    public SortOrder getSortOrder() {
-        return sortOrder;
-    }
 
     public int getCurrentPage() {
         return currentPage;
@@ -48,9 +51,17 @@ public class MovieFilter {
         this.listaMovies = listaMovies;
     }
 
-    public MoviesDbHelper getDbHelper() {
-        return dbHelper;
+    public ContentResolver getContentResolver() {
+        return mContentResolver;
     }
 
-
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("currentPage", currentPage)
+                .append("tipoFiltro", tipoFiltro)
+                .append("listaMovies", listaMovies)
+                .append("contentResolver", mContentResolver)
+                .toString();
+    }
 }

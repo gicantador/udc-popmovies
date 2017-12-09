@@ -19,15 +19,8 @@
                 android:id="@+id/tv_movie_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3sp"
                 android:background="@color/colorPrimaryDark"
-                android:fontFamily="sans-serif"
-                android:padding="10sp"
-                android:shadowColor="@color/colorAccentLight"
-                android:textAlignment="textStart"
-                android:textColor="@color/colorWhite"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                style="@style/TituloFilme"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -106,9 +99,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
-                android:fontFamily="sans-serif"
-                android:textAlignment="viewStart"
-                android:textSize="15sp" />
+                style="@style/Textos"
+                android:textAlignment="viewStart" />
 
 
             <LinearLayout
@@ -117,7 +109,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_trailers_title"
                     style="@style/Titulos"
                     android:text="@string/lb_titulo_trailers" />
 
@@ -154,7 +145,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_review_title"
                     android:text="@string/lb_titulo_reviews"
                     style="@style/Titulos" />
 

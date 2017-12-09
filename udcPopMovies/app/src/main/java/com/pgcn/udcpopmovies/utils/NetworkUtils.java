@@ -5,8 +5,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import com.pgcn.udcpopmovies.enums.SortOrder;
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
+import com.pgcn.udcpopmovies.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,36 +25,34 @@ public class NetworkUtils {
     private static final String API_IMG_ROOT_PATH = "http://image.tmdb.org/t/p/w342";
 
     // connection configuration
-    private final static String API_ROOT = "http://api.themoviedb.org/3/discover/movie";
     private final static String API_MOVIE_ROOT = "https://api.themoviedb.org/3/movie";
     private final static String KEY_PARAM = "api_key";
-    private final static String SORT_BY = "sort_by";
     private final static String PAGE = "page";
-    private final static String VIDEOS = "videos";
-    private final static String REVIEWS = "reviews";
+
     private final static int timeout = 20000; // 20 sec
 
     // filter configuration
-    public static final String SORT_POPULAR_PARAM = "popularity";
-    public static final String SORT_VOTE_PARAM = "vote_average";
-    public static final String SORT_ASC = ".asc";
-    public static final String SORT_DESC = ".desc";
+    private static final String SORT_POPULAR_PARAM = "popular";
+    private static final String TOP_RATED = "top_rated";
 
-    private static final String API_KEY = APIConfigurationConstants.API_KEY;
+    private final static String TRAILERS = "videos";
+    private final static String REVIEWS = "reviews";
+
+    private static final String API_KEY = BuildConfig.API_KEY;
     private static final String DELIMITER_PATTERN = "\\A";
 
     /**
      * Buld conection URL
      *
      * @param tipoLista popular or top rated
-     * @param tipoSort  asc or desc
      * @param pageToGet the number of the page to be request
      * @return
      */
-    public static URL buildMoviesUrl(TipoFiltro tipoLista, SortOrder tipoSort, int pageToGet) {
+    public static URL buildMoviesUrl(int tipoLista, int pageToGet) {
+        String tipoListaParam = getTipoListaParam(tipoLista);
 
-        Uri builtUri = Uri.parse(API_ROOT).buildUpon()
-                .appendQueryParameter(SORT_BY, tipoLista.getValue() + tipoSort.getValue())
+        Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
+                .appendPath(tipoListaParam)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 .build();
@@ -68,6 +65,21 @@ public class NetworkUtils {
 
         Log.d(TAG, "Built URI " + url);
         return url;
+    }
+
+    private static String getTipoListaParam(int tipoLista) {
+        switch (tipoLista) {
+            case TiposDefinidos.LISTA_POPULAR:
+                return NetworkUtils.SORT_POPULAR_PARAM;
+            case TiposDefinidos.LISTA_TOP_RATED:
+                return NetworkUtils.TOP_RATED;
+            case TiposDefinidos.REVIEWS:
+                return NetworkUtils.REVIEWS;
+            case TiposDefinidos.TRAILERS:
+                return NetworkUtils.TRAILERS;
+            default:
+                return NetworkUtils.SORT_POPULAR_PARAM;
+        }
     }
 
     /**
@@ -128,10 +140,10 @@ public class NetworkUtils {
      * @param movieId id do filme
      * @return url para fazer request
      */
-    public static URL buildTrailersUrl(int movieId) {
+    public static URL buildListasUrl(int movieId, int tipoLista) {
         Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
                 .appendPath(String.valueOf(movieId))
-                .appendEncodedPath(VIDEOS)
+                .appendEncodedPath(getTipoListaParam(tipoLista))
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .build();
         URL url = null;
@@ -145,27 +157,4 @@ public class NetworkUtils {
         return url;
     }
 
-    /**
-     * Monta a url para recuperar reviews
-     *
-     * @param movieId
-     * @return
-     */
-    public static URL buildReviewUrl(int movieId) {
-
-        Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
-                .appendPath(String.valueOf(movieId))
-                .appendEncodedPath(REVIEWS)
-                .appendQueryParameter(KEY_PARAM, API_KEY)
-                .build();
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "Built URI " + url);
-        return url;
-    }
 }

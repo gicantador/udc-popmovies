@@ -64,7 +64,7 @@ public class MovieModel implements Parcelable {
 
     // marcado como favorito? por padrao eh false
     private Boolean favorito = false;
-    private int databaseId;
+    private int databaseId = 0;
     /**
      * Construtor com principais atributos
      *
@@ -163,6 +163,10 @@ public class MovieModel implements Parcelable {
         }
     };
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     /**
      * Retorna a url da imagem do poster já completa
      *
@@ -179,12 +183,20 @@ public class MovieModel implements Parcelable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("title", title).append("posterPath", posterPath)
-                .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
-                .append("id", id).append("originalTitle", originalTitle)
-                .append("originalLanguage", originalLanguage).append("backdropPath", backdropPath)
+        return new ToStringBuilder(this)
+                .append("title", title)
+                .append("posterPath", posterPath)
+                .append("adult", adult)
+                .append("overview", overview)
+                .append("releaseDate", releaseDate)
+                .append("id", id)
+                .append("originalTitle", originalTitle)
+                .append("originalLanguage", originalLanguage)
+                .append("backdropPath", backdropPath)
                 .append("voteCount", voteCount)
-                .append("video", video).append("voteAverage", voteAverage).toString();
+                .append("video", video)
+                .append("voteAverage", voteAverage)
+                .toString();
     }
 
 

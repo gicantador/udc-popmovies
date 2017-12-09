@@ -18,10 +18,6 @@ buildscript {
 
 }
 
-plugins {
-    id "org.sonarqube" version "2.6"
-}
-
 allprojects {
     String osName = System.getProperty("os.name").toLowerCase()
     if (osName.contains("windows")) {

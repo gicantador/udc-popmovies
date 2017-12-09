@@ -11,19 +11,10 @@
         android:orderInCategory="2"
         android:title="@string/action_sort_rated"
         app:showAsAction="collapseActionView"/>
-    <item
-        android:id="@+id/action_sort_desc"
-        android:orderInCategory="3"
-        android:title="@string/action_sort_desc"
-        app:showAsAction="collapseActionView"/>
-    <item
-        android:id="@+id/action_sort_asc"
-        android:orderInCategory="4"
-        android:title="@string/action_sort_asc"
-        app:showAsAction="collapseActionView"/>
+
     <item
         android:id="@+id/action_favoritos"
-        android:orderInCategory="5"
+        android:orderInCategory="3"
         android:title="@string/action_favoritos"
         app:showAsAction="collapseActionView"/>
 </menu>

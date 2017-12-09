@@ -1,7 +1,7 @@
 package com.pgcn.udcpopmovies.data;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.model.MovieModel;
@@ -18,13 +18,14 @@ public class MovieFromDataUtil {
     /**
      * Retorna a lista de filmes favoritos
      *
-     * @param dbHelper
+     * @param contentResolver
      * @return
      */
-    public static ArrayList<MovieModel> retrieveAllFavoriteMovies(MoviesDbHelper dbHelper) {
+    public static ArrayList<MovieModel> retrieveAllFavoriteMovies(ContentResolver contentResolver) {
         Log.d(TAG, "retrieveAllFavoriteMovies ");
         ArrayList<MovieModel> listaFilmes = new ArrayList<MovieModel>();
-        Cursor cursor = getAllmovies(dbHelper);
+
+        Cursor cursor = getAllmovies(contentResolver);
         if (null != cursor) {
             int totalMovies = cursor.getCount();
             Log.d(TAG, "filmes recuperados  " + totalMovies);
@@ -34,15 +35,7 @@ public class MovieFromDataUtil {
                 if (!cursor.moveToPosition(position)) {
                     return listaFilmes;
                 }
-                int dataId = cursor.getInt(cursor.getColumnIndex(MoviesContract.FavoriteMovies._ID));
-                int apiId = cursor.getInt(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_API_ID));
-                String title = cursor.getString(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_ORIGINAL_TITLE));
-                String overview = cursor.getString(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_OVERVIEW));
-                String posterPath = cursor.getString(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_POSTER_PATH));
-                String releaseDate = cursor.getString(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_RELEASE_DATE));
-                Double averageVoted = Double.valueOf(cursor.getString(cursor.getColumnIndex(MoviesContract.FavoriteMovies.COLUMN_VOTE_AVERAGE)));
-                Log.d(TAG, " movie title " + title);
-                MovieModel movie = new MovieModel(apiId, title, overview, posterPath, releaseDate, averageVoted, dataId, true);
+                MovieModel movie = getMovieModelFromCursor(cursor);
                 listaFilmes.add(movie);
                 Log.d(TAG, "listaFilmes tem " + listaFilmes.size());
             }
@@ -51,19 +44,39 @@ public class MovieFromDataUtil {
         return listaFilmes;
     }
 
+    public static MovieModel getMovieModelFromCursor(Cursor cursor) {
+        if (null != cursor) {
+            int dataId = cursor.getInt(cursor.getColumnIndex(MoviesContentContract.MoviesEntry
+                    ._ID));
+            int apiId = cursor.getInt(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_API_ID));
+            String title = cursor.getString(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_ORIGINAL_TITLE));
+            String overview = cursor.getString(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_OVERVIEW));
+            String posterPath = cursor.getString(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_POSTER_PATH));
+            String releaseDate = cursor.getString(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_RELEASE_DATE));
+            Double averageVoted = Double.valueOf(cursor.getString(cursor.getColumnIndex(MoviesContentContract.MoviesEntry.COLUMN_VOTE_AVERAGE)));
+            Log.d(TAG, " movie title " + title);
+            return new MovieModel(apiId, title, overview, posterPath, releaseDate, averageVoted,
+                    dataId, true);
+        }
+        return null;
+    }
+
+
     /**
      * Busca os filmes favoritos
      *
-     * @param dbHelper
+     * @param contentResolver
      * @return
      */
-    private static Cursor getAllmovies(MoviesDbHelper dbHelper) {
-        Log.d(TAG, "getAllmovies ");
-        SQLiteDatabase db;
-        db = dbHelper.getReadableDatabase();
-        Log.d(TAG, "isOpen() " + db.isOpen());
+    private static Cursor getAllmovies(ContentResolver contentResolver) {
 
-        Cursor cs = FavoriteMoviesDatabaseUtil.getAllFavoriteMovies(db);
+        Log.d(TAG, "getAllmovies ");
+
+        Cursor cs = contentResolver.query(MoviesContentContract.MoviesEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                MoviesContentContract.MoviesEntry.COLUMN_DTA_CRIACAO);
 
         Log.d(TAG, "Cursor cs " + cs);
 

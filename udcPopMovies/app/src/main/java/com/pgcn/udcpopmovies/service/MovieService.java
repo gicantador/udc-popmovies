@@ -1,17 +1,16 @@
 package com.pgcn.udcpopmovies.service;
 
-import android.content.Context;
+import android.content.ContentResolver;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.data.MovieFromDataUtil;
-import com.pgcn.udcpopmovies.data.MoviesDbHelper;
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 
 import org.json.JSONException;
 
@@ -35,10 +34,9 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
      * No construtor da classe, passamos uma classe responsável por "responder" a requisição após a
      * sua execução Esse responsável é o AsyncTaskDelegate
      *
-     * @param context
      * @param responder
      */
-    public MovieService(Context context, AsyncTaskDelegate responder) {
+    public MovieService(AsyncTaskDelegate responder) {
         this.delegate = responder;
     }
 
@@ -52,8 +50,8 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             MovieFilter movieFilter = (MovieFilter) objects[0];
             if (null != movieFilter) {
 
-                if (TipoFiltro.FAVORITES.equals(movieFilter.getTipoFiltro())) {
-                    movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getDbHelper()));
+                if (TiposDefinidos.LISTA_FAVORITES == movieFilter.getTipoFiltro()) {
+                    movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getContentResolver()));
                 } else {
                     movieFilter.setListaMovies(retrieveMoviesFromTheMovieService(movieFilter));
                 }
@@ -68,17 +66,19 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
         }
     }
 
-    private ArrayList<MovieModel> retrieveAllFavoriteMovies(MoviesDbHelper dbHelper) {
+    private ArrayList<MovieModel> retrieveAllFavoriteMovies(ContentResolver contentResolver) {
         Log.d(TAG, "=== retrieveAllFavoriteMovies");
-        return MovieFromDataUtil.retrieveAllFavoriteMovies(dbHelper);
+        return MovieFromDataUtil.retrieveAllFavoriteMovies(contentResolver);
+
     }
 
 
-    private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter) throws IOException, JSONException {
+    private ArrayList<MovieModel> retrieveMoviesFromTheMovieService(MovieFilter movieFilter)
+            throws IOException, JSONException {
         Log.d(TAG, "=== retrieveMoviesFromTheMovieService");
 
         URL movieRequestUrl = NetworkUtils.buildMoviesUrl(movieFilter.getTipoFiltro(),
-                movieFilter.getSortOrder(), movieFilter.getCurrentPage());
+                movieFilter.getCurrentPage());
         String jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
 
         if (jsonMoviesResponse != null) {
@@ -87,6 +87,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             } else if (!movieFilter.getListaMovies().isEmpty()) {
                 movieFilter.getListaMovies().addAll(TheMoviedbJsonUtils
                         .getSimpleMovieStringsFromJson(jsonMoviesResponse));
+
             }
 
         }
