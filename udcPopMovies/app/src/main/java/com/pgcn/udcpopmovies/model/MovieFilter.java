@@ -1,8 +1,11 @@
 package com.pgcn.udcpopmovies.model;
 
 import android.content.ContentResolver;
+import android.util.Log;
 
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 
@@ -13,20 +16,25 @@ import java.util.ArrayList;
  */
 public class MovieFilter {
 
-    private final TipoFiltro tipoFiltro;
+    private static final String TAG = MovieFilter.class.getSimpleName();
+
     private final int currentPage;
     private ArrayList<MovieModel> listaMovies;
     private final ContentResolver mContentResolver;
 
-    public MovieFilter(TipoFiltro filtro, int currentPage, ArrayList<MovieModel> listaMovies,
+    @TiposDefinidos.Tipos
+    private final int tipoFiltro;
+
+    public MovieFilter(int filtro, int currentPage, ArrayList<MovieModel> listaMovies,
                        ContentResolver contentResolver) {
         this.currentPage = currentPage;
         this.listaMovies = listaMovies;
         this.mContentResolver = contentResolver;
         this.tipoFiltro = filtro;
+        Log.d(TAG, "MovieFilter [" + toString() + " ]");
     }
 
-    public TipoFiltro getTipoFiltro() {
+    public int getTipoFiltro() {
         return tipoFiltro;
     }
 
@@ -47,5 +55,13 @@ public class MovieFilter {
         return mContentResolver;
     }
 
-
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("currentPage", currentPage)
+                .append("tipoFiltro", tipoFiltro)
+                .append("listaMovies", listaMovies)
+                .append("contentResolver", mContentResolver)
+                .toString();
+    }
 }

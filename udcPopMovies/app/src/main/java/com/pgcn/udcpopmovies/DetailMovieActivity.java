@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgcn.udcpopmovies.data.FavoriteMoviesDatabaseUtil;
-import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieDetailBox;
 import com.pgcn.udcpopmovies.model.MovieModel;
@@ -31,6 +30,7 @@ import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
 import com.pgcn.udcpopmovies.service.ReviewService;
 import com.pgcn.udcpopmovies.service.TrailerService;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -242,7 +242,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private void obterTrailers(int movieId) {
         Log.d(TAG, " obterTrailers");
         if (NetworkUtils.isOnline((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))) {
-            new TrailerService(getApplicationContext(), this).execute(movieId);
+            new TrailerService(this).execute(movieId);
         } else {
             mTrailersProgressBar.setVisibility(View.INVISIBLE);
             mMsgErroTrailer.setVisibility(View.VISIBLE);
@@ -255,7 +255,7 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
     private void obterReviews(int movieId) {
         Log.d(TAG, " obterTrailers");
         if (NetworkUtils.isOnline((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE))) {
-            new ReviewService(getApplicationContext(), this).execute(movieId);
+            new ReviewService(this).execute(movieId);
         } else {
             mReviewsProgressBar.setVisibility(View.INVISIBLE);
             mMsgErroReview.setVisibility(View.VISIBLE);
@@ -316,7 +316,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             e.printStackTrace();
             return;
         }
-        if (null != movieDetailBox && TipoListaRetorno.TRAILERS.equals(movieDetailBox.getTipoListaRetorno())) {
+
+        if (null != movieDetailBox && TiposDefinidos.TRAILERS == movieDetailBox.getTipoListaRetorno()) {
             mTrailerList = movieDetailBox.getMovieTrailersList();
             mTrailersProgressBar.setVisibility(View.INVISIBLE);
             if (null != mTrailerList) {
@@ -330,7 +331,8 @@ public class DetailMovieActivity extends AppCompatActivity implements AsyncTaskD
             } else
                 mMsgErroTrailer.setVisibility(View.VISIBLE);
         }
-        if (null != movieDetailBox && TipoListaRetorno.REVIEWS.equals(movieDetailBox.getTipoListaRetorno())) {
+
+        if (null != movieDetailBox && TiposDefinidos.REVIEWS == movieDetailBox.getTipoListaRetorno()) {
             mReviewList = movieDetailBox.getMovieReviewList();
             mReviewsProgressBar.setVisibility(View.INVISIBLE);
             if (null != mReviewList) {

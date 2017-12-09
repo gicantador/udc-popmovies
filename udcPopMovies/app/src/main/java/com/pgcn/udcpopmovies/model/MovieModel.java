@@ -183,12 +183,20 @@ public class MovieModel implements Parcelable {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("title", title).append("posterPath", posterPath)
-                .append("adult", adult).append("overview", overview).append("releaseDate", releaseDate)
-                .append("id", id).append("originalTitle", originalTitle)
-                .append("originalLanguage", originalLanguage).append("backdropPath", backdropPath)
+        return new ToStringBuilder(this)
+                .append("title", title)
+                .append("posterPath", posterPath)
+                .append("adult", adult)
+                .append("overview", overview)
+                .append("releaseDate", releaseDate)
+                .append("id", id)
+                .append("originalTitle", originalTitle)
+                .append("originalLanguage", originalLanguage)
+                .append("backdropPath", backdropPath)
                 .append("voteCount", voteCount)
-                .append("video", video).append("voteAverage", voteAverage).toString();
+                .append("video", video)
+                .append("voteAverage", voteAverage)
+                .toString();
     }
 
 

@@ -5,8 +5,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -28,13 +26,15 @@ public class NetworkUtils {
     private final static String API_MOVIE_ROOT = "https://api.themoviedb.org/3/movie";
     private final static String KEY_PARAM = "api_key";
     private final static String PAGE = "page";
-    private final static String VIDEOS = "videos";
-    private final static String REVIEWS = "reviews";
+
     private final static int timeout = 20000; // 20 sec
 
     // filter configuration
     public static final String SORT_POPULAR_PARAM = "popular";
-    public static final String SORT_VOTE_PARAM = "top_rated";
+    public static final String TOP_RATED = "top_rated";
+
+    private final static String TRAILERS = "videos";
+    private final static String REVIEWS = "reviews";
 
     private static final String API_KEY = APIConfigurationConstants.API_KEY;
     private static final String DELIMITER_PATTERN = "\\A";
@@ -46,10 +46,11 @@ public class NetworkUtils {
      * @param pageToGet the number of the page to be request
      * @return
      */
-    public static URL buildMoviesUrl(TipoFiltro tipoLista, int pageToGet) {
+    public static URL buildMoviesUrl(int tipoLista, int pageToGet) {
+        String tipoListaParam = getTipoListaParam(tipoLista);
 
         Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
-                .appendPath(tipoLista.getValue())
+                .appendPath(tipoListaParam)
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .appendQueryParameter(PAGE, String.valueOf(pageToGet))
                 .build();
@@ -62,6 +63,21 @@ public class NetworkUtils {
 
         Log.d(TAG, "Built URI " + url);
         return url;
+    }
+
+    private static String getTipoListaParam(int tipoLista) {
+        switch (tipoLista) {
+            case TiposDefinidos.LISTA_POPULAR:
+                return NetworkUtils.SORT_POPULAR_PARAM;
+            case TiposDefinidos.LISTA_TOP_RATED:
+                return NetworkUtils.TOP_RATED;
+            case TiposDefinidos.REVIEWS:
+                return NetworkUtils.REVIEWS;
+            case TiposDefinidos.TRAILERS:
+                return NetworkUtils.TRAILERS;
+            default:
+                return NetworkUtils.SORT_POPULAR_PARAM;
+        }
     }
 
     /**
@@ -122,10 +138,10 @@ public class NetworkUtils {
      * @param movieId id do filme
      * @return url para fazer request
      */
-    public static URL buildTrailersUrl(int movieId) {
+    public static URL buildListasUrl(int movieId, int tipoLista) {
         Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
                 .appendPath(String.valueOf(movieId))
-                .appendEncodedPath(VIDEOS)
+                .appendEncodedPath(getTipoListaParam(tipoLista))
                 .appendQueryParameter(KEY_PARAM, API_KEY)
                 .build();
         URL url = null;
@@ -139,27 +155,4 @@ public class NetworkUtils {
         return url;
     }
 
-    /**
-     * Monta a url para recuperar reviews
-     *
-     * @param movieId
-     * @return
-     */
-    public static URL buildReviewUrl(int movieId) {
-
-        Uri builtUri = Uri.parse(API_MOVIE_ROOT).buildUpon()
-                .appendPath(String.valueOf(movieId))
-                .appendEncodedPath(REVIEWS)
-                .appendQueryParameter(KEY_PARAM, API_KEY)
-                .build();
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        Log.d(TAG, "Built URI " + url);
-        return url;
-    }
 }

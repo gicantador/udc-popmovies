@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -22,12 +21,12 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.service.AsyncTaskDelegate;
 import com.pgcn.udcpopmovies.service.MovieService;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,7 +36,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         MoviesAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = ShowMoviesActivity.class.getSimpleName() + " ===== ";
-    private static final String KEY_BOOL_RECARREGA = "KEY_BOOL_RECARREGA";
 
     private ArrayList<MovieModel> mMovieModelArrayList = new ArrayList<MovieModel>();
     private MoviesAdapter mMoviestAdapter;
@@ -46,14 +44,16 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private CoordinatorLayout coordinatorLayout;
     private TextView mFilterTextView;
 
-    private TipoFiltro mTipoFiltro = TipoFiltro.POPULAR;
+    @TiposDefinidos.Tipos
+    private int mTipoFiltro;
 
     private int mCurrentPage = 0;
     private boolean mRecarregaLista = true;
 
-    private static final String KEY_TIPO_FILTRO = "KEY_TIPO_FILTRO";
-    private static final String KEY_MOVIELIST = "KEY_MOVIELIST";
-    private static final String KEY_LIST_STATE = "KEY_LIST_STATE";
+    private static final String KEY_BOOL_RECARREGA = "KEY_BOOL_RECARREGAR";
+    private static final String KEY_TIPO_LISTA = "KEY_TIPO_LISTAGEM";
+    private static final String KEY_MOVIELIST = "KEY_LISTA_MOVIES";
+    private static final String KEY_LIST_STATE = "KEY_LISTA_ESTADO";
     private RecyclerView.LayoutManager mLayoutManager;
     private int mAdapterPosition;
 
@@ -97,13 +97,9 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         Log.d(TAG, "recuperaDados");
 
         if (null != savedInstanceState) {
-            if (savedInstanceState.containsKey(KEY_TIPO_FILTRO)) {
-                String tipo = savedInstanceState.getString(KEY_TIPO_FILTRO);
-                if (null == tipo || TextUtils.isEmpty(tipo)) {
-                    mTipoFiltro = TipoFiltro.POPULAR;
-                } else {
-                    mTipoFiltro = TipoFiltro.getByName(tipo);
-                }
+            if (savedInstanceState.containsKey(KEY_TIPO_LISTA)) {
+                int tipo = savedInstanceState.getInt(KEY_TIPO_LISTA);
+                mTipoFiltro = tipo;
             }
 
             if (savedInstanceState.containsKey(KEY_LIST_STATE)) {
@@ -158,12 +154,12 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
         boolean isOnline = NetworkUtils.isOnline(
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
 
-        if (isOnline || mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
+        if (isOnline || (TiposDefinidos.LISTA_FAVORITES == mTipoFiltro)) {
             if (0 == mCurrentPage) {
                 mCurrentPage++;
             }
 
-            new MovieService(getApplicationContext(), this).execute(new MovieFilter(mTipoFiltro,
+            new MovieService(this).execute(new MovieFilter(mTipoFiltro,
                     mCurrentPage, mMovieModelArrayList, getContentResolver()));
 
         } else {
@@ -225,7 +221,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState");
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_TIPO_FILTRO, mTipoFiltro.getValue());
+        outState.putInt(KEY_TIPO_LISTA, mTipoFiltro);
         outState.putParcelableArrayList(KEY_MOVIELIST, mMovieModelArrayList);
         outState.putParcelable(KEY_LIST_STATE, mLayoutManager.onSaveInstanceState());
         outState.putBoolean(KEY_BOOL_RECARREGA, false);
@@ -248,18 +244,17 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
         switch (id) {
             case R.id.action_sort_popular:
-                mudaTipoOrdenacao(TipoFiltro.POPULAR);
+                mudaTipoOrdenacao(TiposDefinidos.LISTA_POPULAR);
                 break;
             case R.id.action_sort_rated:
-                mudaTipoOrdenacao(TipoFiltro.TOP_RATED);
+                mudaTipoOrdenacao(TiposDefinidos.LISTA_TOP_RATED);
                 break;
             case R.id.action_favoritos:
-                mudaTipoOrdenacao(TipoFiltro.FAVORITES);
+                mudaTipoOrdenacao(TiposDefinidos.LISTA_FAVORITES);
                 break;
 
             default:
-                mudaTipoOrdenacao(TipoFiltro.POPULAR);
-
+                mudaTipoOrdenacao(TiposDefinidos.LISTA_POPULAR);
 
         }
 
@@ -275,15 +270,28 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private String montaTextoAlerta() {
         Log.d(TAG, "montaTextoAlerta");
 
-        final String nm = "action_name_";
-        int resId1Lista = getResources().getIdentifier(nm + mTipoFiltro.getValue(), "string", this.getPackageName());
-        String txtLista = getString(resId1Lista);
+        String txtLista;
+        switch (mTipoFiltro) {
+            case TiposDefinidos.LISTA_POPULAR:
+                txtLista = getString(R.string.action_name_popular);
+                break;
+            case TiposDefinidos.LISTA_TOP_RATED:
+                txtLista = getString(R.string.action_name_top_rated);
+                break;
+            case TiposDefinidos.LISTA_FAVORITES:
+                txtLista = getString(R.string.action_name_favoritos);
+                break;
+            default:
+                txtLista = getString(R.string.action_name_popular);
+        }
+
         String txt = getString(R.string.label_filtro_usado) + StringUtils.SPACE + txtLista;
 
         mFilterTextView.setText(txt);
         mFilterTextView.setVisibility(View.VISIBLE);
         return txt;
     }
+
 
     private void mostrarFeedback(String message) {
         Log.d(TAG, "mostrarFeedback");
@@ -292,7 +300,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 .setAction(R.string.reload, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mudaTipoOrdenacao(TipoFiltro.FAVORITES);
+                        mudaTipoOrdenacao(TiposDefinidos.LISTA_FAVORITES);
                         loadMovieData();
                     }
                 });
@@ -310,23 +318,27 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
     @Override
     protected void onResume() {
-        Log.e(TAG, "onResume mTipoLista" + mTipoFiltro.getValue());
-        if (mTipoFiltro.equals(TipoFiltro.FAVORITES)) {
+        Log.e(TAG, "onResume mTipoLista" + mTipoFiltro);
+        if (TiposDefinidos.LISTA_FAVORITES == mTipoFiltro) {
             invalidateData();
         }
         super.onResume();
     }
 
-    private void mudaTipoOrdenacao(TipoFiltro tpo) {
-        Log.d(TAG, "mudaTipoOrdenacao()" + tpo.getValue());
-        if (!tpo.equals(mTipoFiltro)) {
-            invalidateData();
+    private void mudaTipoOrdenacao(int tpo) {
+        Log.d(TAG, "mudaTipoOrdenacao(" + tpo + ")" + tpo);
+        Log.d(TAG, "mTipoFiltro antes" + mTipoFiltro);
+        // so faz se mudou o tipo da lista
+        if (!(tpo == mTipoFiltro)) {
             mTipoFiltro = tpo;
+            invalidateData();
+            // guarda a ultima ordenação para abrir com ela
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(KEY_TIPO_FILTRO, tpo.getValue());
+            editor.putInt(KEY_TIPO_LISTA, mTipoFiltro);
             editor.commit();
         }
+        Log.d(TAG, "mTipoFiltro depois" + mTipoFiltro);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, montaTextoAlerta(), Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
@@ -334,8 +346,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private void lerTipoOrdenacaoPreferencial() {
         Log.d(TAG,"lerTipoOrdenacaoPreferencial()");
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String defaultTipo = sharedPref.getString(KEY_TIPO_FILTRO, TipoFiltro.POPULAR.getValue());
-        mTipoFiltro = TipoFiltro.getByName(defaultTipo);
+        mTipoFiltro = sharedPref.getInt(KEY_TIPO_LISTA, TiposDefinidos.LISTA_POPULAR);
     }
 
 }

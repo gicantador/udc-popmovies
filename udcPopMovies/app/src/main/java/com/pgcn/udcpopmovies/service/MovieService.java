@@ -6,12 +6,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.data.MovieFromDataUtil;
-import com.pgcn.udcpopmovies.enums.TipoFiltro;
 import com.pgcn.udcpopmovies.exceptions.MovieServiceException;
 import com.pgcn.udcpopmovies.model.MovieFilter;
 import com.pgcn.udcpopmovies.model.MovieModel;
 import com.pgcn.udcpopmovies.utils.NetworkUtils;
 import com.pgcn.udcpopmovies.utils.TheMoviedbJsonUtils;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 
 import org.json.JSONException;
 
@@ -35,10 +35,9 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
      * No construtor da classe, passamos uma classe responsável por "responder" a requisição após a
      * sua execução Esse responsável é o AsyncTaskDelegate
      *
-     * @param context
      * @param responder
      */
-    public MovieService(Context context, AsyncTaskDelegate responder) {
+    public MovieService(AsyncTaskDelegate responder) {
         this.delegate = responder;
     }
 
@@ -52,7 +51,7 @@ public class MovieService extends AsyncTask<Object, String, ArrayList<MovieModel
             MovieFilter movieFilter = (MovieFilter) objects[0];
             if (null != movieFilter) {
 
-                if (TipoFiltro.FAVORITES.equals(movieFilter.getTipoFiltro())) {
+                if (TiposDefinidos.LISTA_FAVORITES == movieFilter.getTipoFiltro()) {
                     movieFilter.setListaMovies(retrieveAllFavoriteMovies(movieFilter.getContentResolver()));
                 } else {
                     movieFilter.setListaMovies(retrieveMoviesFromTheMovieService(movieFilter));

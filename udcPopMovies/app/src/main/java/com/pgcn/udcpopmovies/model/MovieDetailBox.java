@@ -1,6 +1,6 @@
 package com.pgcn.udcpopmovies.model;
 
-import com.pgcn.udcpopmovies.enums.TipoListaRetorno;
+import com.pgcn.udcpopmovies.utils.TiposDefinidos;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,14 @@ import java.util.ArrayList;
 public class MovieDetailBox {
     private final ArrayList<TrailerModel> movieTrailersList;
     private final ArrayList<ReviewModel> movieReviewList;
-    private final TipoListaRetorno tipoListaRetorno;
 
-    public MovieDetailBox(ArrayList<TrailerModel> movieTrailersList, ArrayList<ReviewModel> movieReviewList, TipoListaRetorno tipoListaRetorno) {
+    @TiposDefinidos.Tipos
+    private final int tipoListaRetorno;
+
+    public MovieDetailBox(ArrayList<TrailerModel> movieTrailersList, ArrayList<ReviewModel> movieReviewList, int tiposDefinidos) {
         this.movieTrailersList = movieTrailersList;
         this.movieReviewList = movieReviewList;
-        this.tipoListaRetorno = tipoListaRetorno;
+        this.tipoListaRetorno = tiposDefinidos;
     }
 
     public ArrayList<TrailerModel> getMovieTrailersList() {
@@ -27,7 +29,7 @@ public class MovieDetailBox {
         return movieReviewList;
     }
 
-    public TipoListaRetorno getTipoListaRetorno() {
+    public int getTipoListaRetorno() {
         return tipoListaRetorno;
     }
 }

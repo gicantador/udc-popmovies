@@ -13,7 +13,7 @@ class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = MoviesDbHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "popmovies.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public MoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
