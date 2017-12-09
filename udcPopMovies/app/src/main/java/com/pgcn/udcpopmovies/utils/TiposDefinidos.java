@@ -1,7 +1,6 @@
 package com.pgcn.udcpopmovies.utils;
 
 import android.support.annotation.IntDef;
-import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,10 +20,6 @@ public class TiposDefinidos {
 
     private static final String TAG = TheMoviedbJsonUtils.class.getSimpleName();
 
-
-    public TiposDefinidos(@Tipos int season) {
-        Log.d(TAG, "Tipos :" + season);
-    }
 
     @IntDef({LISTA_POPULAR, LISTA_TOP_RATED, LISTA_FAVORITES, REVIEWS, TRAILERS})
     @Retention(RetentionPolicy.SOURCE)

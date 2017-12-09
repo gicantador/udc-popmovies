@@ -17,7 +17,6 @@ import static com.pgcn.udcpopmovies.data.MoviesContentContract.MoviesEntry;
 
 public class FavoriteMoviesDatabaseUtil {
     private static final String TAG = FavoriteMoviesDatabaseUtil.class.getSimpleName();
-    public static final String KEY_FAVORITOS = "favoritos";
 
     /**
      * Cria uma nova linha na tabela de filmes favoritos do usu[ario. Salva os dados do filme para que nao seja

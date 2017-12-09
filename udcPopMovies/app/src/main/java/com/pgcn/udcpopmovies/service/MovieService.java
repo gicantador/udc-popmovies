@@ -1,7 +1,6 @@
 package com.pgcn.udcpopmovies.service;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 

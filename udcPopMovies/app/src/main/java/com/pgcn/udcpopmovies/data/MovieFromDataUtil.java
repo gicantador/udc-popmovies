@@ -2,7 +2,6 @@ package com.pgcn.udcpopmovies.data;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.pgcn.udcpopmovies.model.MovieModel;

@@ -32,13 +32,13 @@ public class NetworkUtils {
     private final static int timeout = 20000; // 20 sec
 
     // filter configuration
-    public static final String SORT_POPULAR_PARAM = "popular";
-    public static final String TOP_RATED = "top_rated";
+    private static final String SORT_POPULAR_PARAM = "popular";
+    private static final String TOP_RATED = "top_rated";
 
     private final static String TRAILERS = "videos";
     private final static String REVIEWS = "reviews";
 
-    public static final String API_KEY = BuildConfig.API_KEY;
+    private static final String API_KEY = BuildConfig.API_KEY;
     private static final String DELIMITER_PATTERN = "\\A";
 
     /**

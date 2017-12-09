@@ -55,7 +55,6 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     private static final String KEY_MOVIELIST = "KEY_LISTA_MOVIES";
     private static final String KEY_LIST_STATE = "KEY_LISTA_ESTADO";
     private RecyclerView.LayoutManager mLayoutManager;
-    private int mAdapterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +97,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
 
         if (null != savedInstanceState) {
             if (savedInstanceState.containsKey(KEY_TIPO_LISTA)) {
-                int tipo = savedInstanceState.getInt(KEY_TIPO_LISTA);
-                mTipoFiltro = tipo;
+                mTipoFiltro = savedInstanceState.getInt(KEY_TIPO_LISTA);
             }
 
             if (savedInstanceState.containsKey(KEY_LIST_STATE)) {
@@ -177,7 +175,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
     @Override
     public void onClick(MovieModel movie, int adapterPosition) {
         Log.d(TAG, "onClick");
-        mAdapterPosition = adapterPosition;
+        int mAdapterPosition = adapterPosition;
         Context context = this;
         Class destinationClass = DetailMovieActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
@@ -283,6 +281,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
                 break;
             default:
                 txtLista = getString(R.string.action_name_popular);
+                break;
         }
 
         String txt = getString(R.string.label_filtro_usado) + StringUtils.SPACE + txtLista;
@@ -336,7 +335,7 @@ public class ShowMoviesActivity extends AppCompatActivity implements AsyncTaskDe
             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putInt(KEY_TIPO_LISTA, mTipoFiltro);
-            editor.commit();
+            editor.apply();
         }
         Log.d(TAG, "mTipoFiltro depois" + mTipoFiltro);
         Snackbar snackbar = Snackbar.make(coordinatorLayout, montaTextoAlerta(), Snackbar.LENGTH_SHORT);
