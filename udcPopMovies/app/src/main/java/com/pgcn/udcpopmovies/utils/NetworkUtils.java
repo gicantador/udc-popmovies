@@ -5,6 +5,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
+import com.pgcn.udcpopmovies.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -36,7 +38,7 @@ public class NetworkUtils {
     private final static String TRAILERS = "videos";
     private final static String REVIEWS = "reviews";
 
-    private static final String API_KEY = APIConfigurationConstants.API_KEY;
+    public static final String API_KEY = BuildConfig.API_KEY;
     private static final String DELIMITER_PATTERN = "\\A";
 
     /**

@@ -1,18 +1,13 @@
 # udc-popmovies
 App Pop Movies for Udacity classes
 
-Coloque sua API_KEY obtida em http//www.themoviedb.org na classe com.pgcn.udcpopmovies.utils.APIConfigurationConstants
-Essa classe está sendo ignorada pelo git para evitar commitar a chave publicamente. 
-
+Coloque sua API_KEY obtida em http//www.themoviedb.org no arquivo gradle.properties
 ---------------------------------------------------------------------------
 
-package com.pgcn.udcpopmovies.utils;	
+gradle.properties
 		
-public final class APIConfigurationConstants {
-
-    public static final String API_KEY = "<YOUR API KEY HERE>";
-}
-
+# Obtenha suasua API_KEY em http//www.themoviedb.org
+API_KEY="< API KEY AQUI >"
 																			 
 ---------------------------------------------------------------------------
 
