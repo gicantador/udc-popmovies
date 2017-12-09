@@ -5,9 +5,7 @@ Coloque sua API_KEY obtida em http//www.themoviedb.org no arquivo gradle.propert
 ---------------------------------------------------------------------------
 
 gradle.properties
-		
-# Obtenha suasua API_KEY em http//www.themoviedb.org
-API_KEY="< API KEY AQUI >"
+		API_KEY="< API KEY AQUI >"
 																			 
 ---------------------------------------------------------------------------
 
